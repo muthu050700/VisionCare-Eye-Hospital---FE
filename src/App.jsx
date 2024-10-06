@@ -8,6 +8,7 @@ import Login from "./Components/Login and Register/Login";
 import VerifyAccount from "./Components/verify-account/VerifyAccount";
 
 import PropTypes from "prop-types";
+import Profile from "./Components/Login and Register/Profile";
 function App() {
   const PrivateRoute = ({ component }) => {
     const isAuthenticated = Boolean(localStorage.getItem("patient"));
@@ -32,6 +33,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify-account" element={<VerifyAccount />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
       </Routes>
     </BrowserRouter>

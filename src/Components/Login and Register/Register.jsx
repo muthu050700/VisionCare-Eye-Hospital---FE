@@ -14,6 +14,7 @@ const initialFormDetails = {
   state: "",
   pinCode: "",
   email: "",
+  medicalHistory: "",
 };
 
 const Register = () => {
@@ -94,7 +95,7 @@ const Register = () => {
             required
           />{" "}
           <br />
-          <label>Enter your Full Name:</label>
+          <label>Enter your Email:</label>
           <input
             type="email"
             name="email"
@@ -214,6 +215,15 @@ const Register = () => {
             required
           />{" "}
           <br />
+          <label>Medical History:</label>
+          <textarea
+            type="string"
+            name="medicalHistory"
+            value={formDetails.medicalHistory}
+            className=" border-black border"
+            onChange={(e) => handleFormChange(e)}
+            required
+          />{" "}
           <button type="submit">Register</button>
         </form>
       </div>

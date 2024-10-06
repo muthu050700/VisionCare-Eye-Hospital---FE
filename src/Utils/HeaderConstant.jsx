@@ -26,11 +26,6 @@ export const navLinks = [
     name: "Guidelines",
     id: "guidelines",
   },
-  {
-    route: "/profile",
-    name: "Profile",
-    id: "profile",
-  },
 ];
 
 export const bg_Image =

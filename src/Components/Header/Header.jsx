@@ -1,9 +1,24 @@
 import { Link, useLocation } from "react-router-dom";
 import { navLinks } from "../../Utils/HeaderConstant";
+import { useState } from "react";
 
 const Header = () => {
   //Finding pathname
   const { pathname } = useLocation();
+  const [show, setShow] = useState(false);
+
+  // is auth
+  const isAuthenticated = Boolean(localStorage.getItem("patient"));
+
+  const handleProfile = () => setShow(!show);
+  // window.addEventListener("click", () => {
+  //   setShow(!show);
+  // });
+  //clear local storage
+  const clearLocalStorage = () => {
+    localStorage.removeItem("patient");
+    location.reload();
+  };
   return (
     <div>
       {/* for Emergencies and Appointment header */}
@@ -28,7 +43,7 @@ const Header = () => {
           </div>
         </div>
 
-        <ul className="flex gap-5 items-center px-2 text-[20px] font-medium">
+        <div className="flex gap-5 items-center px-2 text-[20px] font-medium list-none">
           {navLinks.map((val) => {
             return (
               <li key={val.id}>
@@ -45,7 +60,39 @@ const Header = () => {
               </li>
             );
           })}
-        </ul>
+          {/* profile image */}
+          <div className="relative">
+            <img
+              src="https://www.zenclass.in/static/media/user.8d49e377.png"
+              className="w-[60px] h-[60px] object-fill"
+              onClick={handleProfile}
+            />
+
+            {show ? (
+              <div className=" bg-slate-800 p-3 absolute right-2 z-20">
+                {isAuthenticated ? (
+                  <div>
+                    <Link to="/profile">
+                      <li>Profile</li>
+                    </Link>
+                    <p onClick={clearLocalStorage}>
+                      <li>logout</li>
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <Link to="/login">
+                      <li>Login</li>
+                    </Link>
+                    <Link to="/register">
+                      <li>Register</li>
+                    </Link>
+                  </div>
+                )}
+              </div>
+            ) : undefined}
+          </div>
+        </div>
       </div>
     </div>
   );
