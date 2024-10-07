@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { patientLoginApi } from "../APIs/apis";
+import { doctorLoginApi, patientLoginApi } from "../APIs/apis";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -8,7 +8,8 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const isAuthenticated = Boolean(localStorage.getItem("patient"));
+  const role = localStorage.getItem("role");
+  // const isAuthenticated = Boolean(localStorage.getItem("userType"));
   // handle login form details
   const handleLoginFormChange = (e) => {
     setLoginFormDetails({
@@ -20,21 +21,41 @@ const Login = () => {
   //handle login form submit
   const handleLoginFormSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const { email, password } = loginFormDetails;
-      const res = await patientLoginApi({ email, password });
-      alert(res.msg);
-      localStorage.setItem("patient", JSON.stringify(res.patient));
-      navigate("/");
-    } catch (e) {
-      console.log("error", e);
-      alert(e.message);
+    if (role === "patients") {
+      try {
+        const { email, password } = loginFormDetails;
+        const res = await patientLoginApi({ email, password });
+        alert(res.msg);
+        const patientJSON = JSON.stringify(res.patient);
+        localStorage.setItem("userEmail", JSON.parse(patientJSON).email);
+        localStorage.setItem("userLogged", JSON.stringify(res.patient.Role));
+        localStorage.setItem("userType", JSON.parse(patientJSON).Role);
+        navigate("/");
+      } catch (e) {
+        console.log("error", e);
+        alert(e.message);
+      }
+    } else if (role === "doctors") {
+      try {
+        const { email, password } = loginFormDetails;
+        const res = await doctorLoginApi({ email, password });
+        console.log(res);
+        alert(res.msg);
+        const patientJSON = JSON.stringify(res.doctor);
+        localStorage.setItem("userEmail", JSON.parse(patientJSON).email);
+        localStorage.setItem("userLogged", JSON.stringify(res.doctor.Role));
+        localStorage.setItem("userType", JSON.parse(patientJSON).Role);
+        navigate("/");
+      } catch (e) {
+        console.log("error", e);
+        alert(e.message);
+      }
     }
   };
 
-  if (isAuthenticated) {
-    return <Navigate to="/" />;
-  }
+  // if (isAuthenticated) {
+  //   return <Navigate to="/" />;
+  // }
 
   return (
     <div className="px-4 py-10 bg-gray-300 w-6/12 flex flex-col m-auto">

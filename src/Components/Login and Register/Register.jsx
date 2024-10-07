@@ -27,7 +27,7 @@ const Register = () => {
   //For Role
   const [role, setRole] = useState("option");
   // is auth
-  const isAuthenticated = Boolean(localStorage.getItem("patient"));
+  const isAuthenticated = Boolean(localStorage.getItem("userType"));
   // handle change in form field details
 
   const handleFormChange = (e) => {
@@ -59,11 +59,12 @@ const Register = () => {
 
     try {
       delete formDetails.confirmPassword;
-      const res = await createPatientApi(formDetails);
+      const res = await createPatientApi(formDetails, formDetails.Role);
       //Checking wheather the patient profile is already exist or not
       if (res.status !== 409) {
         //if not it execute this
         alert(`${role} profile registered successfully`);
+        localStorage.setItem("role", formDetails.Role);
         navigate("/login");
       } else {
         //otherwise it will execute this
@@ -147,9 +148,9 @@ const Register = () => {
             onChange={(e) => setRole(e.target.value)}
           >
             <option value="option">Select a option</option>
-            <option value="patient">Patient</option>
-            <option value="doctor">Doctor</option>
-            <option value="admin">Admin</option>
+            <option value="patients">Patient</option>
+            <option value="doctors">Doctor</option>
+            <option value="admins">Admin</option>
           </select>
           {errorMessage === "Please select the role" && (
             <p className=" text-red-500 font-bold">{errorMessage}</p>

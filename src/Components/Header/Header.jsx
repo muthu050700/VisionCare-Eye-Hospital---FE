@@ -1,6 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { navLinks } from "../../Utils/HeaderConstant";
 import { useState } from "react";
+// import { patientLogoutApi } from "../APIs/apis";
 
 const Header = () => {
   //Finding pathname
@@ -8,28 +9,43 @@ const Header = () => {
   const [show, setShow] = useState(false);
 
   // is auth
-  const isAuthenticated = Boolean(localStorage.getItem("patient"));
-
+  const isAuthenticated = Boolean(localStorage.getItem("userLogged"));
+  const userType = localStorage.getItem("userType");
+  const userEmail = localStorage.getItem("userEmail");
   const handleProfile = () => setShow(!show);
-  // window.addEventListener("click", () => {
-  //   setShow(!show);
-  // });
+
   //clear local storage
-  const clearLocalStorage = () => {
-    localStorage.removeItem("patient");
+  const clearLocalStorage = async () => {
+    localStorage.removeItem("userLogged");
     location.reload();
+
+    // try {
+    //   const res = await patientLogoutApi({ userEmail });
+    //   alert(res.msg);
+    //   Navigate("/login");
+    // } catch (e) {
+    //   console.log("error", e);
+    // }
   };
   return (
     <div>
       {/* for Emergencies and Appointment header */}
-      <div className="flex justify-end bg-slate-400 py-2 gap-2 px-2">
-        <button className="bg-pink-600 px-4 py-2 rounded-md font-medium text-white">
-          For Emergencies
-        </button>
-        <button className="bg-pink-600 px-4 py-3 rounded-md font-bold text-white ">
-          Book Appointment
-        </button>
-      </div>
+      {userType === "patients" && (
+        <>
+          {" "}
+          <div className="flex justify-end bg-slate-400 py-2 gap-2 px-2">
+            <button className="bg-pink-600 px-4 py-2 rounded-md font-medium text-white">
+              For Emergencies
+            </button>
+            <Link to="/book-appointment">
+              {" "}
+              <p className="bg-pink-600 px-4 py-3 rounded-md font-bold text-white cursor-pointer">
+                Book Appointment
+              </p>
+            </Link>
+          </div>
+        </>
+      )}
 
       {/* logo and nav links */}
       <div className="bg-slate-300 flex justify-between ">
@@ -46,18 +62,20 @@ const Header = () => {
         <div className="flex gap-5 items-center px-2 text-[20px] font-medium list-none">
           {navLinks.map((val) => {
             return (
-              <li key={val.id}>
-                <Link
-                  to={val.route}
-                  className={
-                    pathname === val.route
-                      ? " border-b-4 border-orange-500"
-                      : undefined
-                  }
-                >
-                  {val.name}
-                </Link>
-              </li>
+              val.id !== userType && (
+                <li key={val.id}>
+                  <Link
+                    to={val.route}
+                    className={
+                      pathname === val.route
+                        ? " border-b-4 border-orange-500"
+                        : undefined
+                    }
+                  >
+                    {val.name}
+                  </Link>
+                </li>
+              )
             );
           })}
           {/* profile image */}

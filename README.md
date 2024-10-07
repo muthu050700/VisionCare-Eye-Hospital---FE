@@ -31,7 +31,8 @@ Development :
 1.  Patient:
 
     - Login Page:
-
+      -Email
+      -Password
     - Register
 
       - Full Name: string
@@ -51,3 +52,14 @@ Development :
         -Optional Fields (can be filled later):
         -Health Insurance Information (if applicable).
         -Photo Upload (optional profile photo).
+
+2.  Patient Booking
+    -Full Name: (Text input)
+    -Date of Birth: (Date picker)
+    -Phone Number: (Text input)
+    -Email Address: (Email input)
+    -Address: (Text area for patient’s address)
+    -Select Doctor
+    -Preferred Date
+    -Appointment Type: - In-person Consultation: (Radio button) - Virtual Consultation: (Radio button)
+    -Submit Button:

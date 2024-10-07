@@ -14,7 +14,7 @@ export const navLinks = [
   {
     route: "/find_doctor",
     name: "Find a Doctor",
-    id: "findDoctor",
+    id: "doctors",
   },
   {
     route: "/contact",
