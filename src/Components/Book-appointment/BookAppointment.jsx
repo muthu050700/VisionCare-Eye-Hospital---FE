@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { createAppointment } from "../APIs/apis";
+import { doctorContext } from "../Context/Context";
 
 const BookAppointment = () => {
   const [formData, setFormData] = useState({
@@ -8,10 +9,12 @@ const BookAppointment = () => {
     phoneNumber: "",
     email: "",
     address: "",
-    doctor: "",
+    doctorId: "",
     appointmentDate: "",
     appointmentType: "In-person", // Default to In-person consultation
   });
+
+  const { doctorData, setDoctorId } = useContext(doctorContext);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -33,7 +36,7 @@ const BookAppointment = () => {
     }
     console.log("Form Data Submitted:", formData);
   };
-
+  if (doctorData === null) return;
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold mb-6">Book an Appointment</h2>
@@ -112,16 +115,21 @@ const BookAppointment = () => {
             Select Doctor
           </label>
           <select
-            name="doctor"
-            value={formData.doctor}
+            name="doctorId"
+            value={formData.doctorId}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded"
             required
           >
             <option value="">-- Select Doctor --</option>
-            <option value="Dr. John Doe">Dr. John Doe</option>
-            <option value="Dr. Jane Smith">Dr. Jane Smith</option>
-            {/* Add more doctors as needed */}
+            {doctorData.map((val) => {
+              console.log(val.doctorId);
+              return (
+                <option key={val.doctorId} value={val.doctorId}>
+                  {val.fullName}
+                </option>
+              );
+            })}
           </select>
         </div>
 

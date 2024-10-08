@@ -18,7 +18,9 @@ const Header = () => {
   const clearLocalStorage = async () => {
     localStorage.removeItem("userLogged");
     location.reload();
+    // localStorage.removeItem("token");
 
+    // Navigate("/login");
     // try {
     //   const res = await patientLogoutApi({ userEmail });
     //   alert(res.msg);

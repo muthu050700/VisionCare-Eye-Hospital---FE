@@ -37,8 +37,11 @@ export const patientLoginApi = async (patientCredentials) => {
 
   if (res.status !== 200) {
     throw new Error("Invalid Credentials or somthing went wrong");
+  } else {
+    const data = await res.json();
+    localStorage.setItem("token", data.tokenLogin);
+    return data;
   }
-  return await res.json();
 };
 
 export const doctorLoginApi = async (doctorCredentials) => {
