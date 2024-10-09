@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { createPatientApi } from "../APIs/apis";
 import { Navigate, useNavigate } from "react-router-dom";
-import { checkVaildData } from "./validate";
+import { checkValidData } from "./validate";
 const initialFormDetails = {
   fullName: "",
   phoneNumber: "",
@@ -30,6 +30,25 @@ const Register = () => {
   const isAuthenticated = Boolean(localStorage.getItem("userType"));
   // handle change in form field details
 
+  const checkAge = (dateOfBirth) => {
+    const dob = new Date(dateOfBirth);
+    const today = new Date();
+    const age = today.getFullYear() - dob.getFullYear();
+    const monthDifference = today.getMonth() - dob.getMonth();
+    const dayDifference = today.getDate() - dob.getDate();
+
+    if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
+      return "Enter valid date";
+    }
+
+    // If age is less than 18, return an error message
+    if (age < 18) {
+      return "You must be at least 18 years old to register.";
+    }
+
+    return null; // Age is valid
+  };
+
   const handleFormChange = (e) => {
     setFormDetails({
       ...formDetails,
@@ -41,191 +60,278 @@ const Register = () => {
   //Handle form submit
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const message = checkVaildData(formDetails.email, formDetails.password);
-    setErrorMessage(message);
-    if (message) return;
 
-    //Checking wheather the password and confirm password is same or not
+    // Reset error message initially
+    setErrorMessage("");
+
+    // Validate email and password
+    const validationMessage = checkValidData(
+      formDetails.email,
+      formDetails.password
+    );
+    console.log("validationMessage", validationMessage);
+    if (validationMessage) {
+      setErrorMessage(validationMessage);
+      return;
+    }
+    console.log(formDetails.password !== formDetails.confirmPassword);
+    // Ensure passwords match
     if (formDetails.password !== formDetails.confirmPassword) {
-      alert("Password do not match");
+      setErrorMessage("Passwords do not match");
       return;
     }
 
-    //checking wheather the user is seleting the role or not
+    // Ensure a role is selected
     if (role === "option") {
-      setErrorMessage("Please select the role");
+      setErrorMessage("Please select a valid role");
+      return;
+    }
+    // Validate age (only allow registration if user is 18 or older)
+    const ageValidationMessage = checkAge(formDetails.dateOfBirth);
+    console.log(ageValidationMessage);
+    if (ageValidationMessage) {
+      setErrorMessage(ageValidationMessage);
       return;
     }
 
     try {
-      delete formDetails.confirmPassword;
-      const res = await createPatientApi(formDetails, formDetails.Role);
-      //Checking wheather the patient profile is already exist or not
-      if (res.status !== 409) {
-        //if not it execute this
-        alert(`${role} profile registered successfully`);
-        localStorage.setItem("role", formDetails.Role);
-        navigate("/login");
+      const { confirmPassword, ...userDetails } = formDetails; // Exclude confirmPassword from API payload
+      const res = await createPatientApi(userDetails, role); // Use the selected role directly
+
+      // Check if profile is already registered
+      if (res.status === 409) {
+        setErrorMessage(res.msg);
       } else {
-        //otherwise it will execute this
-        alert(res.msg);
-        return;
+        alert(`${role} profile registered successfully`);
+        localStorage.setItem("role", role); // Store role in local storage
+        navigate("/login");
       }
-    } catch (e) {
-      alert("Something went wrong");
+    } catch (error) {
+      setErrorMessage("Something went wrong during registration");
+    } finally {
+      setFormDetails(initialFormDetails); // Reset form after submission
     }
-    setFormDetails(initialFormDetails);
   };
 
   if (isAuthenticated) {
     return <Navigate to="/" />;
   }
   return (
-    <div className="">
-      <div className="px-4 py-10 bg-gray-300 w-6/12 flex flex-col m-auto">
-        <h1>Create your Profile</h1>
-        <p>Patients are required to register their information on this form.</p>
-        <form className="flex flex-col py-5 gap-1" onSubmit={handleFormSubmit}>
-          <label>Enter your Full Name:</label>
-          <input
-            type="text"
-            name="fullName"
-            value={formDetails.fullName}
-            className=" border-black border"
-            onChange={(e) => handleFormChange(e)}
-            required
-          />{" "}
-          <br />
-          <label>Enter your Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formDetails.email}
-            className=" border-black border"
-            onChange={(e) => handleFormChange(e)}
-            required
-          />
-          {errorMessage === "Email is not valid" && (
-            <p className=" text-red-500 font-bold">{errorMessage}</p>
-          )}
-          <br />
-          <label>Phone Number:</label>{" "}
-          <input
-            type="number"
-            name="phoneNumber"
-            value={formDetails.phoneNumber}
-            className=" border-black border"
-            onChange={(e) => handleFormChange(e)}
-            required
-          />{" "}
-          <br />
-          <label>Password:</label>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="px-6 py-8 bg-white shadow-md rounded-md w-full max-w-lg">
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Create Your Profile
+        </h1>
+        <p className="text-center text-gray-600 mb-8">
+          Patients are required to register their information on this form.
+        </p>
+        <form className="space-y-5" onSubmit={handleFormSubmit}>
+          {/* Full Name */}
+          <div>
+            <label className="block font-medium text-gray-700">
+              Full Name:
+            </label>
+            <input
+              type="text"
+              name="fullName"
+              value={formDetails.fullName}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              onChange={(e) => handleFormChange(e)}
+              required
+            />
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block font-medium text-gray-700">Email:</label>
+            <input
+              type="email"
+              name="email"
+              value={formDetails.email}
+              className={`w-full border border-gray-300 rounded-lg p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                errorMessage === "Email is not valid" ? "border-red-500" : ""
+              }`}
+              onChange={(e) => handleFormChange(e)}
+            />
+            {errorMessage === "Email is not valid" && (
+              <p className="text-red-500 mt-1">{errorMessage}</p>
+            )}
+          </div>
+
+          {/* Phone Number */}
+          <div>
+            <label className="block font-medium text-gray-700">
+              Phone Number:
+            </label>
+            <input
+              type="number"
+              name="phoneNumber"
+              value={formDetails.phoneNumber}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              onChange={(e) => handleFormChange(e)}
+              required
+            />
+          </div>
+
+          {/* Password */}
+          <label className="block font-medium text-gray-700">Password:</label>
           <input
             type="password"
             name="password"
             value={formDetails.password}
-            className=" border-black border"
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${
+              errorMessage === "Passwords do not match" ? "border-red-500" : ""
+            }`}
             onChange={(e) => handleFormChange(e)}
-            required
-          />{" "}
-          {errorMessage === "Password is not valid" && (
-            <p className=" text-red-500 font-bold">{errorMessage}</p>
-          )}
-          <br />
-          <label>Confirm Password:</label>
+          />
+
+          <label className="block font-medium text-gray-700">
+            Confirm Password:
+          </label>
           <input
             type="password"
             name="confirmPassword"
             value={formDetails.confirmPassword}
-            className=" border-black border"
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${
+              errorMessage === "Passwords do not match" ? "border-red-500" : ""
+            }`}
             onChange={(e) => handleFormChange(e)}
-            required
-          />{" "}
-          <br />
-          <label>Role:</label>
+          />
+          {errorMessage === "Passwords do not match" && (
+            <p className="text-red-500">{errorMessage}</p>
+          )}
+          {errorMessage === "Password is not valid" && (
+            <p className="text-red-500">{errorMessage}</p>
+          )}
+
+          {/* Role */}
+          <label className="block font-medium text-gray-700">Role:</label>
           <select
-            className="mx-1 px-2 py-2 sm:py-2 rounded-lg bg-gray-800 border-gray-800 text-gray-200 font-bold"
+            className={`w-full px-3 py-2 bg-gray-100 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${
+              errorMessage === "Please select a valid role"
+                ? "border-red-500"
+                : ""
+            }`}
             onChange={(e) => setRole(e.target.value)}
           >
-            <option value="option">Select a option</option>
+            <option value="option">Select an option</option>
             <option value="patients">Patient</option>
             <option value="doctors">Doctor</option>
             <option value="admins">Admin</option>
           </select>
-          {errorMessage === "Please select the role" && (
-            <p className=" text-red-500 font-bold">{errorMessage}</p>
+          {errorMessage === "Please select a valid role" && (
+            <p className="text-red-500">{errorMessage}</p>
           )}
-          <br />
-          <label>Date of Birth:</label>
-          <input
-            type="date"
-            name="dateOfBirth"
-            value={formDetails.dateOfBirth}
-            className=" border-black border"
-            onChange={(e) => handleFormChange(e)}
-            required
-          />{" "}
-          <br />
-          <label>Gender:</label>
-          <input
-            type="text"
-            name="gender"
-            value={formDetails.gender}
-            className=" border-black border"
-            onChange={(e) => handleFormChange(e)}
-            required
-          />{" "}
-          <br />
-          <label>Address:</label>
-          <input
-            type="text"
-            name="address"
-            value={formDetails.address}
-            className=" border-black border"
-            onChange={(e) => handleFormChange(e)}
-            required
-          />{" "}
-          <br />
-          <label>City:</label>
-          <input
-            type="text"
-            name="city"
-            value={formDetails.city}
-            className=" border-black border"
-            onChange={(e) => handleFormChange(e)}
-            required
-          />{" "}
-          <br />
-          <label>State:</label>
-          <input
-            type="text"
-            name="state"
-            value={formDetails.state}
-            className=" border-black border"
-            onChange={(e) => handleFormChange(e)}
-            required
-          />{" "}
-          <br />
-          <label>Pin Code:</label>
-          <input
-            type="number"
-            name="pinCode"
-            value={formDetails.pinCode}
-            className=" border-black border"
-            onChange={(e) => handleFormChange(e)}
-            required
-          />{" "}
-          <br />
-          <label>Medical History:</label>
-          <textarea
-            type="string"
-            name="medicalHistory"
-            value={formDetails.medicalHistory}
-            className=" border-black border"
-            onChange={(e) => handleFormChange(e)}
-            required
-          />{" "}
-          <button type="submit">Register</button>
+          {/* Date of Birth */}
+          <div>
+            <label className="block font-medium text-gray-700">
+              Date of Birth:
+            </label>
+            <input
+              type="date"
+              name="dateOfBirth"
+              value={formDetails.dateOfBirth}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              onChange={(e) => handleFormChange(e)}
+              required
+            />
+            {errorMessage ===
+              "You must be at least 18 years old to register." && (
+              <p className="text-red-500">{errorMessage}</p>
+            )}
+            {errorMessage === "Enter valid date" && (
+              <p className="text-red-500">{errorMessage}</p>
+            )}
+          </div>
+
+          {/* Gender */}
+          <div>
+            <label className="block font-medium text-gray-700">Gender:</label>
+            <input
+              type="text"
+              name="gender"
+              value={formDetails.gender}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              onChange={(e) => handleFormChange(e)}
+              required
+            />
+          </div>
+
+          {/* Address */}
+          <div>
+            <label className="block font-medium text-gray-700">Address:</label>
+            <input
+              type="text"
+              name="address"
+              value={formDetails.address}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              onChange={(e) => handleFormChange(e)}
+              required
+            />
+          </div>
+
+          {/* City */}
+          <div>
+            <label className="block font-medium text-gray-700">City:</label>
+            <input
+              type="text"
+              name="city"
+              value={formDetails.city}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              onChange={(e) => handleFormChange(e)}
+              required
+            />
+          </div>
+
+          {/* State */}
+          <div>
+            <label className="block font-medium text-gray-700">State:</label>
+            <input
+              type="text"
+              name="state"
+              value={formDetails.state}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              onChange={(e) => handleFormChange(e)}
+              required
+            />
+          </div>
+
+          {/* Pin Code */}
+          <div>
+            <label className="block font-medium text-gray-700">Pin Code:</label>
+            <input
+              type="number"
+              name="pinCode"
+              value={formDetails.pinCode}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              onChange={(e) => handleFormChange(e)}
+              required
+            />
+          </div>
+
+          {/* Medical History */}
+          <div>
+            <label className="block font-medium text-gray-700">
+              Medical History:
+            </label>
+            <textarea
+              name="medicalHistory"
+              value={formDetails.medicalHistory}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              onChange={(e) => handleFormChange(e)}
+              required
+            />
+          </div>
+
+          {/* Submit Button */}
+          <div className="text-center">
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            >
+              Register
+            </button>
+          </div>
         </form>
       </div>
     </div>

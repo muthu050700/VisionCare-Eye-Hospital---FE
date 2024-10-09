@@ -26,9 +26,9 @@ const Login = () => {
         const { email, password } = loginFormDetails;
         const res = await patientLoginApi({ email, password });
         alert(res.msg);
-        const patientJSON = JSON.stringify(res.patient);
+        const patientJSON = JSON.stringify(res.user);
         localStorage.setItem("userEmail", JSON.parse(patientJSON).email);
-        localStorage.setItem("userLogged", JSON.stringify(res.patient.Role));
+        localStorage.setItem("userLogged", JSON.stringify(res.user.Role));
         localStorage.setItem("userType", JSON.parse(patientJSON).Role);
         navigate("/");
       } catch (e) {
@@ -58,32 +58,46 @@ const Login = () => {
   // }
 
   return (
-    <div className="px-4 py-10 bg-gray-300 w-6/12 flex flex-col m-auto">
-      <h1>Login</h1>
-      <form
-        className="flex flex-col py-5 gap-1"
-        onSubmit={handleLoginFormSubmit}
-      >
-        <label>Email:</label>
-        <input
-          type="email"
-          name="email"
-          value={loginFormDetails.email}
-          className=" border-black border"
-          onChange={(e) => handleLoginFormChange(e)}
-        />
-        <br />
-        <label>Password:</label>
-        <input
-          type="password"
-          name="password"
-          value={loginFormDetails.password}
-          className=" border-black border"
-          onChange={(e) => handleLoginFormChange(e)}
-        />{" "}
-        <br />
-        <button type="submit">Login</button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="px-6 py-10 bg-white shadow-lg rounded-lg w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-5 text-center text-gray-800">
+          Login
+        </h1>
+        <form className="flex flex-col gap-4" onSubmit={handleLoginFormSubmit}>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Email:
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={loginFormDetails.email}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+              onChange={(e) => handleLoginFormChange(e)}
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Password:
+            </label>
+            <input
+              type="password"
+              name="password"
+              value={loginFormDetails.password}
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+              onChange={(e) => handleLoginFormChange(e)}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="mt-5 w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+          >
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
