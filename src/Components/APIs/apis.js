@@ -60,23 +60,6 @@ export const doctorLoginApi = async (doctorCredentials) => {
   return await res.json();
 };
 
-//logout
-// export const patientLogoutApi = async (email) => {
-//   console.log(email);
-//   const res = await fetch(`${BE_URL}/patients/logout`, {
-//     body: JSON.stringify(email),
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json;charaset=utf-8",
-//     },
-//   });
-
-//   // if (res.status !== 200) {
-//   //   throw new Error("Invalid Credentials or somthing went wrong");
-//   // }
-//   return await res.json();
-// };
-
 //book appointent
 
 export const createAppointment = async (appointentDetails) => {
