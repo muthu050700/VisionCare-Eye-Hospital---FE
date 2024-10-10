@@ -7,7 +7,13 @@ const Header = () => {
   const { pathname } = useLocation();
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
-
+  const doctorRoles = [
+    "Ophthalmologist",
+    "Surgeon",
+    "Optometrist",
+    "Consultant",
+    "doctor",
+  ];
   // is auth
   const token = localStorage.getItem("token");
   const handleProfile = () => setShow(!show);
@@ -28,6 +34,7 @@ const Header = () => {
     return null;
   };
   const userRole = getUserRole();
+  console.log(userRole);
   return (
     <div>
       {/* for Emergencies and Appointment header */}
@@ -70,7 +77,36 @@ const Header = () => {
               Home
             </li>
           </Link>
-          {userRole === "doctor" && (
+
+          {userRole === "admin" && (
+            <>
+              {" "}
+              <Link to="/doctor-dashboard">
+                <li
+                  className={
+                    pathname === "/doctor-dashboard"
+                      ? " border-b-4 border-orange-500"
+                      : undefined
+                  }
+                >
+                  Doctor Dashboard
+                </li>
+              </Link>
+              <Link to="/patient-dashboard">
+                <li
+                  className={
+                    pathname === "/patient-dashboard"
+                      ? " border-b-4 border-orange-500"
+                      : undefined
+                  }
+                >
+                  Patient Dashboard
+                </li>
+              </Link>
+            </>
+          )}
+
+          {doctorRoles.includes(userRole) && (
             <Link to="/appointments">
               <li
                 className={

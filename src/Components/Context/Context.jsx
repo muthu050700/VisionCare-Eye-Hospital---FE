@@ -13,10 +13,15 @@ const Context = ({ children }) => {
   }, []);
 
   const fetchData = async () => {
-    const res = await fetch("http://localhost:4500/doctors");
+    const res = await fetch("http://localhost:4500/api/users");
     const data = await res.json();
     setDoctorData(data);
-    console.log(data);
+
+    data.map((val) => {
+      if (val.role === "doctor") {
+        setDoctorId(val.id);
+      }
+    });
   };
 
   return (

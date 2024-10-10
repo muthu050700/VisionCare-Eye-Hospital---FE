@@ -10,6 +10,8 @@ import Profile from "./Components/Login and Register/Profile";
 import BookAppointment from "./Components/Book-appointment/BookAppointment";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import Appointments from "./Components/Doctor-appointments/Appointments";
+import DoctotDashboard from "./Components/Doctor-dashboard/DoctotDashboard";
+import PatientDashboard from "./Components/Patient-Dashboard/PatientDashboard";
 function App() {
   const token = localStorage.getItem("token");
 
@@ -28,7 +30,19 @@ function App() {
 
           {/* Protected Route */}
           <Route
-            element={<ProtectedRoute allowedRoles={["patient", "doctor"]} />}
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  "patient",
+                  "doctor",
+                  "admin",
+                  "Ophthalmologist",
+                  "Surgeon",
+                  "Optometrist",
+                  "Consultant",
+                ]}
+              />
+            }
           >
             <Route path="/register" element={<Navigate to="/" />} />
             <Route path="/login" element={<Navigate to="/" />} />
@@ -40,15 +54,43 @@ function App() {
           </Route>
 
           {/* patient route */}
-          <Route element={<ProtectedRoute allowedRoles={["patient"]} />}>
+          <Route
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  "patient",
+                  "Ophthalmologist",
+                  "Surgeon",
+                  "Optometrist",
+                  "Consultant",
+                ]}
+              />
+            }
+          >
             <Route path="/book-appointment" element={<BookAppointment />} />
             <Route path="/find_doctor" element={<About />} />
           </Route>
           {/* doctor route */}
-          <Route element={<ProtectedRoute allowedRoles={["doctor"]} />}>
+          <Route
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  "doctor",
+                  "Ophthalmologist",
+                  "Surgeon",
+                  "Optometrist",
+                  "Consultant",
+                ]}
+              />
+            }
+          >
             <Route path="/appointments" element={<Appointments />} />
           </Route>
-
+          {/* admin route */}
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+            <Route path="/doctor-dashboard" element={<DoctotDashboard />} />
+            <Route path="/patient-dashboard" element={<PatientDashboard />} />
+          </Route>
           <Route path="/verify-account" element={<VerifyAccount />} />
         </Route>
       </Routes>

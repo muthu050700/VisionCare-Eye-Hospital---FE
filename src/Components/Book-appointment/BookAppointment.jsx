@@ -122,12 +122,15 @@ const BookAppointment = () => {
             required
           >
             <option value="">-- Select Doctor --</option>
+
             {doctorData.map((val) => {
-              console.log(val.doctorId);
+              console.log(val);
               return (
-                <option key={val.doctorId} value={val.doctorId}>
-                  {val.fullName}
-                </option>
+                val.role === "doctor" && (
+                  <option key={val.id} value={val.id}>
+                    {val.fullName}
+                  </option>
+                )
               );
             })}
           </select>

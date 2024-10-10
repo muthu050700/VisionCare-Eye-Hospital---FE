@@ -1,4 +1,3 @@
-import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
@@ -13,7 +12,6 @@ const getUserRole = () => {
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const userRole = getUserRole();
-  console.log(userRole);
   return !allowedRoles.includes(userRole) ? (
     <Navigate to="/login" />
   ) : (
