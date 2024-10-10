@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { createAppointment } from "../APIs/apis";
 import { doctorContext } from "../Context/Context";
 

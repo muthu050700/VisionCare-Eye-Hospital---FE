@@ -5,7 +5,6 @@ import "./index.css";
 import DoctorContext from "./Components/Context/Context.jsx";
 createRoot(document.getElementById("root")).render(
   <DoctorContext>
-    {" "}
     <App />
   </DoctorContext>
 );

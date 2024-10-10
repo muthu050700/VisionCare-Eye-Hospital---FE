@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { doctorLoginApi, patientLoginApi } from "../APIs/apis";
+import { userLogin } from "../APIs/apis";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -8,8 +8,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const role = localStorage.getItem("role");
-  // const isAuthenticated = Boolean(localStorage.getItem("userType"));
+
   // handle login form details
   const handleLoginFormChange = (e) => {
     setLoginFormDetails({
@@ -21,41 +20,16 @@ const Login = () => {
   //handle login form submit
   const handleLoginFormSubmit = async (e) => {
     e.preventDefault();
-    if (role === "patients") {
-      try {
-        const { email, password } = loginFormDetails;
-        const res = await patientLoginApi({ email, password });
-        alert(res.msg);
-        const patientJSON = JSON.stringify(res.user);
-        localStorage.setItem("userEmail", JSON.parse(patientJSON).email);
-        localStorage.setItem("userLogged", JSON.stringify(res.user.Role));
-        localStorage.setItem("userType", JSON.parse(patientJSON).Role);
-        navigate("/");
-      } catch (e) {
-        console.log("error", e);
-        alert(e.message);
-      }
-    } else if (role === "doctors") {
-      try {
-        const { email, password } = loginFormDetails;
-        const res = await doctorLoginApi({ email, password });
-        console.log(res);
-        alert(res.msg);
-        const patientJSON = JSON.stringify(res.doctor);
-        localStorage.setItem("userEmail", JSON.parse(patientJSON).email);
-        localStorage.setItem("userLogged", JSON.stringify(res.doctor.Role));
-        localStorage.setItem("userType", JSON.parse(patientJSON).Role);
-        navigate("/");
-      } catch (e) {
-        console.log("error", e);
-        alert(e.message);
-      }
+    try {
+      const { email, password } = loginFormDetails;
+      const res = await userLogin({ email, password });
+      alert(res.msg);
+      navigate("/");
+    } catch (e) {
+      console.log("error", e);
+      alert(e.message);
     }
   };
-
-  // if (isAuthenticated) {
-  //   return <Navigate to="/" />;
-  // }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

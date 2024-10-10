@@ -1,12 +1,10 @@
 const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
-const role = localStorage.getItem("role");
-//create a patient
 
-export const createPatientApi = async (patientDetails, role) => {
-  const userRole = role.replace(/"/g, "");
-  console.log(userRole);
-  const res = await fetch(`${BE_URL}/${userRole}`, {
-    body: JSON.stringify(patientDetails),
+// user register Api
+
+export const registerApi = async (userDetails) => {
+  const res = await fetch(`${BE_URL}/auth-router/register`, {
+    body: JSON.stringify(userDetails),
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
@@ -23,11 +21,11 @@ export const verifyAccountApi = async (token) => {
   return await res.json();
 };
 
-//patient login
+//user login
 
-export const patientLoginApi = async (patientCredentials) => {
+export const userLogin = async (patientCredentials) => {
   console.log(patientCredentials);
-  const res = await fetch(`${BE_URL}/patients/login`, {
+  const res = await fetch(`${BE_URL}/auth-router/login`, {
     body: JSON.stringify(patientCredentials),
     method: "POST",
     headers: {
@@ -43,21 +41,6 @@ export const patientLoginApi = async (patientCredentials) => {
     localStorage.setItem("token", data.tokenLogin);
     return data;
   }
-};
-
-export const doctorLoginApi = async (doctorCredentials) => {
-  const res = await fetch(`${BE_URL}/doctors/login`, {
-    body: JSON.stringify(doctorCredentials),
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json;charaset=utf-8",
-    },
-  });
-
-  if (res.status !== 200) {
-    throw new Error("Invalid Credentials or somthing went wrong");
-  }
-  return await res.json();
 };
 
 //book appointent

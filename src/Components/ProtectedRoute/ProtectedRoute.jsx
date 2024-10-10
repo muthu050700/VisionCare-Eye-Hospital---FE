@@ -1,9 +1,24 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
-const ProtectedRoute = () => {
-  const isAuthenticated = Boolean(localStorage.getItem("userLogged"));
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+const getUserRole = () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    const decodedToken = jwtDecode(token);
+    return decodedToken.role;
+  }
+  return null;
+};
+
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const userRole = getUserRole();
+  console.log(userRole);
+  return !allowedRoles.includes(userRole) ? (
+    <Navigate to="/login" />
+  ) : (
+    <Outlet />
+  );
 };
 
 export default ProtectedRoute;

@@ -1,38 +1,37 @@
-import { Link, Navigate, useLocation } from "react-router-dom";
-import { navLinks } from "../../Utils/HeaderConstant";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-// import { patientLogoutApi } from "../APIs/apis";
+import { jwtDecode } from "jwt-decode";
 
 const Header = () => {
   //Finding pathname
   const { pathname } = useLocation();
   const [show, setShow] = useState(false);
+  const navigate = useNavigate();
 
   // is auth
-  const isAuthenticated = Boolean(localStorage.getItem("userLogged"));
-  const userType = localStorage.getItem("userType");
-  const userEmail = localStorage.getItem("userEmail");
+  const token = localStorage.getItem("token");
   const handleProfile = () => setShow(!show);
 
-  //clear local storage
-  const clearLocalStorage = async () => {
-    localStorage.removeItem("userLogged");
-    location.reload();
-    // localStorage.removeItem("token");
-
-    // Navigate("/login");
-    // try {
-    //   const res = await patientLogoutApi({ userEmail });
-    //   alert(res.msg);
-    //   Navigate("/login");
-    // } catch (e) {
-    //   console.log("error", e);
-    // }
+  //clear local storage for logout
+  const logout = async () => {
+    localStorage.removeItem("token");
+    navigate("/login");
   };
+
+  //for userRole
+  const getUserRole = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      return decodedToken.role;
+    }
+    return null;
+  };
+  const userRole = getUserRole();
   return (
     <div>
       {/* for Emergencies and Appointment header */}
-      {userType === "patients" && (
+      {userRole === "patient" && (
         <>
           {" "}
           <div className="flex justify-end bg-slate-400 py-2 gap-2 px-2">
@@ -62,24 +61,77 @@ const Header = () => {
         </div>
 
         <div className="flex gap-5 items-center px-2 text-[20px] font-medium list-none">
-          {navLinks.map((val) => {
-            return (
-              val.id !== userType && (
-                <li key={val.id}>
-                  <Link
-                    to={val.route}
-                    className={
-                      pathname === val.route
-                        ? " border-b-4 border-orange-500"
-                        : undefined
-                    }
-                  >
-                    {val.name}
-                  </Link>
-                </li>
-              )
-            );
-          })}
+          <Link to="/">
+            <li
+              className={
+                pathname === "/" ? " border-b-4 border-orange-500" : undefined
+              }
+            >
+              Home
+            </li>
+          </Link>
+          {userRole === "doctor" && (
+            <Link to="/appointments">
+              <li
+                className={
+                  pathname === "/appointments"
+                    ? " border-b-4 border-orange-500"
+                    : undefined
+                }
+              >
+                Appointments
+              </li>
+            </Link>
+          )}
+          <Link to="/about">
+            {" "}
+            <li
+              className={
+                pathname === "/about"
+                  ? " border-b-4 border-orange-500"
+                  : undefined
+              }
+            >
+              About us
+            </li>
+          </Link>
+          <Link to="/contact">
+            {" "}
+            <li
+              className={
+                pathname === "/contact"
+                  ? " border-b-4 border-orange-500"
+                  : undefined
+              }
+            >
+              Contact us
+            </li>
+          </Link>
+
+          {userRole === "patient" && (
+            <Link to="/find_doctor">
+              <li
+                className={
+                  pathname === "/find_doctor"
+                    ? " border-b-4 border-orange-500"
+                    : undefined
+                }
+              >
+                Find a doctor
+              </li>
+            </Link>
+          )}
+          <Link to="/guidelines">
+            <li
+              className={
+                pathname === "/guidelines"
+                  ? " border-b-4 border-orange-500"
+                  : undefined
+              }
+            >
+              Guidelines
+            </li>
+          </Link>
           {/* profile image */}
           <div className="relative">
             <img
@@ -90,12 +142,12 @@ const Header = () => {
 
             {show ? (
               <div className=" bg-slate-800 p-3 absolute right-2 z-20">
-                {isAuthenticated ? (
+                {token ? (
                   <div>
                     <Link to="/profile">
                       <li>Profile</li>
                     </Link>
-                    <p onClick={clearLocalStorage}>
+                    <p onClick={logout}>
                       <li>logout</li>
                     </p>
                   </div>

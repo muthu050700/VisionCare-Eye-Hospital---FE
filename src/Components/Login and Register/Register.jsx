@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createPatientApi } from "../APIs/apis";
+import { registerApi } from "../APIs/apis";
 import { Navigate, useNavigate } from "react-router-dom";
 import { checkValidData } from "./validate";
 const initialFormDetails = {
@@ -52,7 +52,7 @@ const Register = () => {
   const handleFormChange = (e) => {
     setFormDetails({
       ...formDetails,
-      Role: role,
+      role: role,
       [e.target.name]: e.target.value,
     });
   };
@@ -96,14 +96,13 @@ const Register = () => {
 
     try {
       const { confirmPassword, ...userDetails } = formDetails; // Exclude confirmPassword from API payload
-      const res = await createPatientApi(userDetails, role); // Use the selected role directly
+      const res = await registerApi(userDetails, role); // Use the selected role directly
 
       // Check if profile is already registered
       if (res.status === 409) {
         setErrorMessage(res.msg);
       } else {
         alert(`${role} profile registered successfully`);
-        localStorage.setItem("role", role); // Store role in local storage
         navigate("/login");
       }
     } catch (error) {
@@ -215,9 +214,9 @@ const Register = () => {
             onChange={(e) => setRole(e.target.value)}
           >
             <option value="option">Select an option</option>
-            <option value="patients">Patient</option>
-            <option value="doctors">Doctor</option>
-            <option value="admins">Admin</option>
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+            <option value="admin">Admin</option>
           </select>
           {errorMessage === "Please select a valid role" && (
             <p className="text-red-500">{errorMessage}</p>
