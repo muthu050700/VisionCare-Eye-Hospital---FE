@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { deleteUserApi, registerApi, handleRoleChangeApi } from "../APIs/apis"; // Import your API functions
 import { FaTimes } from "react-icons/fa"; // React icon for close button
-
+import { jwtDecode } from "jwt-decode";
+const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
 Modal.setAppElement("#root");
 
 const PatientDashboard = () => {
@@ -25,9 +26,24 @@ const PatientDashboard = () => {
     password: "", // Add password field
     confirmPassword: "", // Add confirm password field
   });
-
+  const doctorRoles = [
+    "doctor",
+    "Optometrist",
+    "Ophthalmologist",
+    "Surgeon",
+    "Consultant",
+  ];
   const token = localStorage.getItem("token");
 
+  const getUserRole = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      return decodedToken.role;
+    }
+    return null;
+  };
+  const userRole = getUserRole();
   // Fetch patient data once on mount
   useEffect(() => {
     fetchData();
@@ -35,16 +51,13 @@ const PatientDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(
-        "https://visioncare-eye-hospital-be-ovt6.onrender.com/admin/users",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json;charset=utf-8",
-          },
-        }
-      );
+      const res = await fetch(`${BE_URL}/admin/users`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      });
       const data = await res.json();
       setPatientData(data);
     } catch (error) {
@@ -132,209 +145,215 @@ const PatientDashboard = () => {
     alert(res.msg);
     fetchData(); // Refresh data after deletion
   };
-
-  return (
-    <div className="p-5">
-      <div className="flex justify-between items-center mb-5">
-        <h2 className="text-3xl font-bold text-gray-700">Patient Dashboard</h2>
-        <button
-          onClick={handleAddRecord}
-          className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-        >
-          Add Record
-        </button>
-      </div>
-
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="py-2 px-4 border">Full Name</th>
-              <th className="py-2 px-4 border">Email</th>
-              <th className="py-2 px-4 border">Phone</th>
-              <th className="py-2 px-4 border">Address</th>
-              <th className="py-2 px-4 border">Date of Birth</th>
-              <th className="py-2 px-4 border">Gender</th>
-              <th className="py-2 px-4 border">City</th>
-              <th className="py-2 px-4 border">State</th>
-              <th className="py-2 px-4 border">Pin Code</th>
-              <th className="py-2 px-4 border">Medical History</th>
-              <th className="py-2 px-4 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {patientData.map(
-              (patient) =>
-                patient.role === "patient" && (
-                  <tr key={patient.id} className="border-b">
-                    <td className="py-2 px-4">{patient.fullName}</td>
-                    <td className="py-2 px-4">{patient.email}</td>
-                    <td className="py-2 px-4">{patient.phoneNumber}</td>
-                    <td className="py-2 px-4">{patient.address}</td>
-                    <td className="py-2 px-4">
-                      {new Date(patient.dateOfBirth).toLocaleDateString()}
-                    </td>
-                    <td className="py-2 px-4">{patient.gender}</td>
-                    <td className="py-2 px-4">{patient.city}</td>
-                    <td className="py-2 px-4">{patient.state}</td>
-                    <td className="py-2 px-4">{patient.pinCode}</td>
-                    <td className="py-2 px-4">{patient.medicalHistory}</td>
-                    <td className="py-2 px-4 flex space-x-2">
-                      <button
-                        onClick={() => handleEdit(patient)}
-                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(patient.id)}
-                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                )
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Modal for Add/Edit */}
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        shouldCloseOnOverlayClick={true} // Close on outside click
-        contentLabel={isEditing ? "Edit Patient" : "Add Patient"}
-        className="p-5 bg-white max-w-lg mx-auto mt-10 rounded-lg shadow-lg"
-        style={{
-          content: {
-            maxHeight: "80vh", // Limit height to 80% of the viewport
-            overflowY: "auto", // Enable scrolling when content exceeds height
-          },
-        }}
-      >
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">
-            {isEditing ? "Edit Patient" : "Add New Patient"}
+  if (patientData.length !== 0)
+    return (
+      <div className="p-5">
+        <div className="flex justify-between items-center mb-5">
+          <h2 className="text-3xl font-bold text-gray-700">
+            Patient Dashboard
           </h2>
-          <button onClick={() => setModalIsOpen(false)}>
-            <FaTimes className="text-red-600" />
-          </button>
+          {!doctorRoles.includes(userRole) && (
+            <button
+              onClick={handleAddRecord}
+              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+            >
+              Add Record
+            </button>
+          )}
         </div>
-        <div className="space-y-4">
-          <input
-            type="text"
-            name="fullName"
-            placeholder="Full Name"
-            value={formData.fullName}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-          <input
-            type="text"
-            name="phoneNumber"
-            placeholder="Phone Number"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-          <input
-            type="text"
-            name="address"
-            placeholder="Address"
-            value={formData.address}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-          <input
-            type="date"
-            name="dateOfBirth"
-            value={formData.dateOfBirth}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-          <input
-            type="text"
-            name="city"
-            placeholder="City"
-            value={formData.city}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-          <input
-            type="text"
-            name="state"
-            placeholder="State"
-            value={formData.state}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-          <input
-            type="text"
-            name="pinCode"
-            placeholder="Pin Code"
-            value={formData.pinCode}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          />
-          <textarea
-            name="medicalHistory"
-            placeholder="Medical History"
-            value={formData.medicalHistory}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-          ></textarea>
 
-          {/* New Password Fields */}
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-            required
-          />
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-            required
-          />
-
-          <button
-            onClick={handleSubmit}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-          >
-            {isEditing ? "Update Patient" : "Add Patient"}
-          </button>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="py-2 px-4 border">Full Name</th>
+                <th className="py-2 px-4 border">Email</th>
+                <th className="py-2 px-4 border">Phone</th>
+                <th className="py-2 px-4 border">Address</th>
+                <th className="py-2 px-4 border">Date of Birth</th>
+                <th className="py-2 px-4 border">Gender</th>
+                <th className="py-2 px-4 border">City</th>
+                <th className="py-2 px-4 border">State</th>
+                <th className="py-2 px-4 border">Pin Code</th>
+                <th className="py-2 px-4 border">Medical History</th>
+                <th className="py-2 px-4 border">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {patientData.map(
+                (patient) =>
+                  patient.role === "patient" && (
+                    <tr key={patient.id} className="border-b">
+                      <td className="py-2 px-4">{patient.fullName}</td>
+                      <td className="py-2 px-4">{patient.email}</td>
+                      <td className="py-2 px-4">{patient.phoneNumber}</td>
+                      <td className="py-2 px-4">{patient.address}</td>
+                      <td className="py-2 px-4">
+                        {new Date(patient.dateOfBirth).toLocaleDateString()}
+                      </td>
+                      <td className="py-2 px-4">{patient.gender}</td>
+                      <td className="py-2 px-4">{patient.city}</td>
+                      <td className="py-2 px-4">{patient.state}</td>
+                      <td className="py-2 px-4">{patient.pinCode}</td>
+                      <td className="py-2 px-4">{patient.medicalHistory}</td>
+                      <td className="py-2 px-4 flex space-x-2">
+                        <button
+                          onClick={() => handleEdit(patient)}
+                          className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                        >
+                          Edit
+                        </button>
+                        {!doctorRoles.includes(userRole) && (
+                          <button
+                            onClick={() => handleDelete(patient.id)}
+                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  )
+              )}
+            </tbody>
+          </table>
         </div>
-      </Modal>
-    </div>
-  );
+
+        {/* Modal for Add/Edit */}
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={() => setModalIsOpen(false)}
+          shouldCloseOnOverlayClick={true} // Close on outside click
+          contentLabel={isEditing ? "Edit Patient" : "Add Patient"}
+          className="p-5 bg-white max-w-lg mx-auto mt-10 rounded-lg shadow-lg"
+          style={{
+            content: {
+              maxHeight: "80vh", // Limit height to 80% of the viewport
+              overflowY: "auto", // Enable scrolling when content exceeds height
+            },
+          }}
+        >
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">
+              {isEditing ? "Edit Patient" : "Add New Patient"}
+            </h2>
+            <button onClick={() => setModalIsOpen(false)}>
+              <FaTimes className="text-red-600" />
+            </button>
+          </div>
+          <div className="space-y-4">
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Full Name"
+              value={formData.fullName}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <input
+              type="text"
+              name="phoneNumber"
+              placeholder="Phone Number"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <input
+              type="text"
+              name="address"
+              placeholder="Address"
+              value={formData.address}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <input
+              type="date"
+              name="dateOfBirth"
+              value={formData.dateOfBirth}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            >
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+            <input
+              type="text"
+              name="city"
+              placeholder="City"
+              value={formData.city}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <input
+              type="text"
+              name="state"
+              placeholder="State"
+              value={formData.state}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <input
+              type="text"
+              name="pinCode"
+              placeholder="Pin Code"
+              value={formData.pinCode}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+            <textarea
+              name="medicalHistory"
+              placeholder="Medical History"
+              value={formData.medicalHistory}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            ></textarea>
+
+            {/* New Password Fields */}
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              required
+            />
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              required
+            />
+
+            <button
+              onClick={handleSubmit}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+            >
+              {isEditing ? "Update Patient" : "Add Patient"}
+            </button>
+          </div>
+        </Modal>
+      </div>
+    );
 };
 
 export default PatientDashboard;

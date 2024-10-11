@@ -92,3 +92,9 @@ export const deleteUserApi = async (id) => {
   });
   return await res.json();
 };
+
+// //reschedule the change in date and time by patient
+
+// export const rescheduleAppointmentApi = ()=>{
+
+// }

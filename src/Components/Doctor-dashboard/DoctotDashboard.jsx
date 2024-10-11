@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { deleteUserApi, handleRoleChangeApi, registerApi } from "../APIs/apis";
 import { FaTimes } from "react-icons/fa"; // React icon for close button
-
+const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
 Modal.setAppElement("#root");
 
 const DoctorDashboard = () => {
@@ -41,16 +41,13 @@ const DoctorDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch(
-        "https://visioncare-eye-hospital-be-ovt6.onrender.com/admin/users",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json;charset=utf-8",
-          },
-        }
-      );
+      const res = await fetch(`${BE_URL}/admin/users`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      });
       const data = await res.json();
       setDoctorData(data);
     } catch (error) {
@@ -307,12 +304,12 @@ const DoctorDashboard = () => {
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-lg"
           >
-            {/* <option value="select">Select Role</option> */}
-            {doctorRoles.map((role) => (
-              <option key={role} value={role}>
-                {role}
-              </option>
-            ))}
+            <option value="">Select Doctor</option>
+            <option value="doctor">doctor</option>
+            <option value="Optometrist">Optometrist</option>
+            <option value="Ophthalmologist">Ophthalmologist</option>
+            <option value="Surgeon">Surgeon</option>
+            <option value="Consultant">Consultant</option>
           </select>
           {/* Password fields */}
           <input

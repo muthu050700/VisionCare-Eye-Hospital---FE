@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { createAppointment } from "../APIs/apis";
 import { doctorContext } from "../Context/Context";
+import { jwtDecode } from "jwt-decode";
 
 const BookAppointment = () => {
   const [formData, setFormData] = useState({
@@ -11,10 +12,44 @@ const BookAppointment = () => {
     address: "",
     doctorId: "",
     appointmentDate: "",
+    appointmentTime: "", // Add appointmentTime to the state
     appointmentType: "In-person", // Default to In-person consultation
+    status: "Pending", // Default status when booking an appointment
   });
 
-  const { doctorData, setDoctorId } = useContext(doctorContext);
+  const { doctorData } = useContext(doctorContext);
+  // Get patient ID from the JWT token
+  const getPatientId = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      return decodedToken.id;
+    }
+    return null;
+  };
+
+  const patientId = getPatientId();
+  // Function to validate that the patient is at least 18 years old
+  const isValidAge = (dateOfBirth) => {
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      return age - 1;
+    }
+    return age;
+  };
+
+  // Function to ensure the appointment date is today or a future date
+  const isValidAppointmentDate = (appointmentDate) => {
+    const today = new Date();
+    const selectedDate = new Date(appointmentDate);
+    return selectedDate >= today.setHours(0, 0, 0, 0); // Set time to midnight for date comparison
+  };
 
   // Handle input changes
   const handleChange = (e) => {
@@ -27,16 +62,30 @@ const BookAppointment = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can send the form data to the backend (API call)
-    const res = await createAppointment(formData);
+
+    // Validate the age
+    if (isValidAge(formData.dateOfBirth) < 18) {
+      alert("You must be at least 18 years old to book an appointment.");
+      return;
+    }
+
+    // Validate the appointment date
+    if (!isValidAppointmentDate(formData.appointmentDate)) {
+      alert("You can only book appointments for today or future dates.");
+      return;
+    }
+
     try {
-      alert(`appointment successfully`);
+      const res = await createAppointment({ formData, patientId }); // Make the API call
+      alert("Appointment successfully booked.");
     } catch (e) {
-      alert("Something went wrong", e);
+      alert("Something went wrong. Please try again.", e);
     }
     console.log("Form Data Submitted:", formData);
   };
-  if (doctorData === null) return;
+
+  if (doctorData === null) return null;
+
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold mb-6">Book an Appointment</h2>
@@ -122,17 +171,14 @@ const BookAppointment = () => {
             required
           >
             <option value="">-- Select Doctor --</option>
-
-            {doctorData.map((val) => {
-              console.log(val);
-              return (
+            {doctorData.map(
+              (val) =>
                 val.role === "doctor" && (
                   <option key={val.id} value={val.id}>
                     {val.fullName}
                   </option>
                 )
-              );
-            })}
+            )}
           </select>
         </div>
 
@@ -145,6 +191,21 @@ const BookAppointment = () => {
             type="date"
             name="appointmentDate"
             value={formData.appointmentDate}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+
+        {/* Preferred Time */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">
+            Preferred Time
+          </label>
+          <input
+            type="time"
+            name="appointmentTime" // Add appointmentTime field
+            value={formData.appointmentTime} // Bind to appointmentTime
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded"
             required

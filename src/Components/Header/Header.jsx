@@ -91,19 +91,35 @@ const Header = () => {
                 >
                   Doctor Dashboard
                 </li>
-              </Link>
-              <Link to="/patient-dashboard">
-                <li
-                  className={
-                    pathname === "/patient-dashboard"
-                      ? " border-b-4 border-orange-500"
-                      : undefined
-                  }
-                >
-                  Patient Dashboard
-                </li>
-              </Link>
+              </Link>{" "}
             </>
+          )}
+
+          {doctorRoles.includes(userRole) && (
+            <Link to="/patient-dashboard">
+              <li
+                className={
+                  pathname === "/patient-dashboard"
+                    ? " border-b-4 border-orange-500"
+                    : undefined
+                }
+              >
+                Patient Dashboard
+              </li>
+            </Link>
+          )}
+          {userRole === "admin" && (
+            <Link to="/patient-dashboard">
+              <li
+                className={
+                  pathname === "/patient-dashboard"
+                    ? " border-b-4 border-orange-500"
+                    : undefined
+                }
+              >
+                Patient Dashboard
+              </li>
+            </Link>
           )}
 
           {doctorRoles.includes(userRole) && (
@@ -131,6 +147,33 @@ const Header = () => {
               About us
             </li>
           </Link>
+
+          {userRole === "patient" && (
+            <>
+              <Link to="/patient-appointment">
+                <li
+                  className={
+                    pathname === "/patient-appointment"
+                      ? " border-b-4 border-orange-500"
+                      : undefined
+                  }
+                >
+                  Patient Appointment
+                </li>
+              </Link>
+              <Link to="/find_doctor">
+                <li
+                  className={
+                    pathname === "/find_doctor"
+                      ? " border-b-4 border-orange-500"
+                      : undefined
+                  }
+                >
+                  Find a doctor
+                </li>
+              </Link>
+            </>
+          )}
           <Link to="/contact">
             {" "}
             <li
@@ -143,20 +186,6 @@ const Header = () => {
               Contact us
             </li>
           </Link>
-
-          {userRole === "patient" && (
-            <Link to="/find_doctor">
-              <li
-                className={
-                  pathname === "/find_doctor"
-                    ? " border-b-4 border-orange-500"
-                    : undefined
-                }
-              >
-                Find a doctor
-              </li>
-            </Link>
-          )}
           <Link to="/guidelines">
             <li
               className={

@@ -12,6 +12,7 @@ import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import Appointments from "./Components/Doctor-appointments/Appointments";
 import DoctotDashboard from "./Components/Doctor-dashboard/DoctotDashboard";
 import PatientDashboard from "./Components/Patient-Dashboard/PatientDashboard";
+import PatientAppointment from "./Components/Patient-appointment/PatientAppointment";
 function App() {
   const token = localStorage.getItem("token");
 
@@ -54,21 +55,13 @@ function App() {
           </Route>
 
           {/* patient route */}
-          <Route
-            element={
-              <ProtectedRoute
-                allowedRoles={[
-                  "patient",
-                  "Ophthalmologist",
-                  "Surgeon",
-                  "Optometrist",
-                  "Consultant",
-                ]}
-              />
-            }
-          >
+          <Route element={<ProtectedRoute allowedRoles={["patient"]} />}>
             <Route path="/book-appointment" element={<BookAppointment />} />
             <Route path="/find_doctor" element={<About />} />
+            <Route
+              path="/patient-appointment"
+              element={<PatientAppointment />}
+            />
           </Route>
           {/* doctor route */}
           <Route
@@ -86,10 +79,14 @@ function App() {
           >
             <Route path="/appointments" element={<Appointments />} />
           </Route>
+          <Route
+            element={<ProtectedRoute allowedRoles={["admin", "doctor"]} />}
+          >
+            <Route path="/patient-dashboard" element={<PatientDashboard />} />
+          </Route>
           {/* admin route */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route path="/doctor-dashboard" element={<DoctotDashboard />} />
-            <Route path="/patient-dashboard" element={<PatientDashboard />} />
           </Route>
           <Route path="/verify-account" element={<VerifyAccount />} />
         </Route>

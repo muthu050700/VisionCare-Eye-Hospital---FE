@@ -3,15 +3,15 @@ import { jwtDecode } from "jwt-decode";
 const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
 const token = localStorage.getItem("token");
 
-const DoctorAppointments = () => {
+const PatientAppointments = () => {
   // Appointments state
   const [appointments, setAppointments] = useState([]);
   const [rescheduleDate, setRescheduleDate] = useState({});
   const [rescheduleTime, setRescheduleTime] = useState({});
-  const [status, setStatus] = useState({});
+  const [cancelledAppointments, setCancelledAppointments] = useState([]);
 
-  // Get doctor ID from the JWT token
-  const getDoctorId = () => {
+  // Get patient ID from the JWT token
+  const getPatientId = () => {
     const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
@@ -20,31 +20,33 @@ const DoctorAppointments = () => {
     return null;
   };
 
-  const doctorId = getDoctorId();
-  console.log(doctorId);
-  // Fetch appointments when doctorId is available
+  const patientId = getPatientId();
+
+  // Fetch appointments when patientId is available
   useEffect(() => {
-    if (doctorId) {
+    if (patientId) {
       fetchData();
     }
-  }, [doctorId]);
+  }, []);
 
-  // Fetch the doctor's appointments
+  // Fetch the patient's appointments
   const fetchData = async () => {
     try {
-      const res = await fetch(`${BE_URL}/doctor/appointments/${doctorId}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json;charset=utf-8",
-        },
-      });
+      const res = await fetch(
+        `${BE_URL}/book-appointment/appointment-status/${patientId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json;charset=utf-8",
+          },
+        }
+      );
 
       const data = await res.json();
       if (data.msg === "Access denied") alert(data.msg);
-
-      // Format appointments
-      const updatedAppointments = data.appointments.map((appointment) => ({
+      // Split the appointmentDate into date and time
+      const updatedAppointments = data.map((appointment) => ({
         ...appointment,
         appointmentDate: new Date(
           appointment.appointmentDate
@@ -61,7 +63,7 @@ const DoctorAppointments = () => {
   };
 
   // Handle the rescheduling of an appointment
-  const handleRescheduleChange = (id, value) => {
+  const handleRescheduleChange = async (id, value) => {
     setRescheduleDate({
       ...rescheduleDate,
       [id]: value,
@@ -83,7 +85,7 @@ const DoctorAppointments = () => {
 
     try {
       const res = await fetch(
-        `${BE_URL}/book-appointment/doctor/reschedule/${appointmentId}`,
+        `${BE_URL}/book-appointment/patient/reschedule/${appointmentId}`,
         {
           method: "PUT",
           headers: {
@@ -106,81 +108,48 @@ const DoctorAppointments = () => {
     }
   };
 
-  // Handle status update (Approved/Rejected)
-  const handleStatusChange = (id, value) => {
-    setStatus({
-      ...status,
-      [id]: value,
-    });
-  };
-
-  const handleStatusUpdate = async (appointmentId) => {
-    const updatedStatus = {
-      status: status[appointmentId],
-    };
-
+  // Handle cancellation of an appointment
+  const handleCancel = async (appointmentId) => {
     try {
-      const res = await fetch(
-        `${BE_URL}/book-appointment/doctor/update-status/${appointmentId}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json;charset=utf-8",
-          },
-          body: JSON.stringify(updatedStatus),
-        }
-      );
+      const res = await fetch(`${BE_URL}/patient/cancel/${appointmentId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      });
 
       const data = await res.json();
-      if (data.msg) {
-        alert("Status updated successfully!");
+      if (data.success) {
+        alert("Appointment cancelled successfully!");
+        setCancelledAppointments([...cancelledAppointments, appointmentId]);
         fetchData();
       } else {
-        alert("Failed to update status");
+        alert("Failed to cancel the appointment");
       }
     } catch (error) {
-      console.error("Error updating status:", error);
+      console.error("Error cancelling appointment:", error);
     }
   };
-
   return (
     <div className="w-full mx-auto p-4">
-      <h2 className="text-3xl font-bold mb-6">Appointments</h2>
+      <h2 className="text-3xl font-bold mb-6">Your Appointments</h2>
       <div className="overflow-x-auto">
         <table className="table-auto w-full text-left border-collapse">
           <thead>
-            <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-              <th className="px-4 py-2 border-b-2 border-gray-300 font-semibold">
-                Full Name
-              </th>
-              <th className="px-4 py-2 border-b-2 border-gray-300 font-semibold">
-                Email
-              </th>
-              <th className="px-4 py-2 border-b-2 border-gray-300 font-semibold">
-                Phone
-              </th>
-              <th className="px-4 py-2 border-b-2 border-gray-300 font-semibold">
-                Date of Birth
-              </th>
-              <th className="px-4 py-2 border-b-2 border-gray-300 font-semibold">
-                Appointment Date
-              </th>
-              <th className="px-4 py-2 border-b-2 border-gray-300 font-semibold">
-                Appointment Time
-              </th>
-              <th className="px-4 py-2 border-b-2 border-gray-300 font-semibold">
-                Type
-              </th>
-              <th className="px-4 py-2 border-b-2 border-gray-300 font-semibold">
-                Status
-              </th>
-              <th className="px-4 py-2 border-b-2 border-gray-300 font-semibold">
-                Reschedule
-              </th>
+            <tr>
+              <th className="px-4 py-2">Full Name</th>
+              <th className="px-4 py-2">Email</th>
+              <th className="px-4 py-2">Phone</th>
+              <th className="px-4 py-2">Date of Birth</th>
+              <th className="px-4 py-2">Appointment Date</th>
+              <th className="px-4 py-2">Appointment Time</th>
+              <th className="px-4 py-2">Type</th>
+              <th className="px-4 py-2">Status</th>
+              <th className="px-4 py-2">Reschedule</th>
+              <th className="px-4 py-2">Cancel</th>
             </tr>
           </thead>
-
           <tbody>
             {appointments.length !== 0 ? (
               appointments.map((appointment) => (
@@ -197,31 +166,13 @@ const DoctorAppointments = () => {
                       : appointment.appointmentDate}
                   </td>
                   <td className="px-4 py-2">
+                    {" "}
                     {appointment.appointmentDate === "Invalid Date"
                       ? appointment.rescheduledTime
                       : appointment.appointmentTime}
                   </td>
                   <td className="px-4 py-2">{appointment.appointmentType}</td>
-                  <td className="px-4 py-2">
-                    <select
-                      value={status[appointment.id] || appointment.status}
-                      onChange={(e) =>
-                        handleStatusChange(appointment.id, e.target.value)
-                      }
-                      className="px-2 py-1 border rounded"
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="approved">Approved</option>
-                      <option value="rejected">Rejected</option>
-                    </select>
-                    <button
-                      onClick={() => handleStatusUpdate(appointment.id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                      Update Status
-                    </button>
-                  </td>
-
+                  <td className="px-4 py-2">{appointment.status}</td>
                   <td className="px-4 py-2">
                     <input
                       type="date"
@@ -240,13 +191,24 @@ const DoctorAppointments = () => {
                           e.target.value
                         )
                       }
-                      className="w-full px-2 py-1 border rounded mt-2"
+                      className="w-full px-2 py-1 border rounded"
                     />
                     <button
                       onClick={() => handleReschedule(appointment.id)}
                       className="bg-green-500 text-white mt-2 px-4 py-2 rounded hover:bg-green-600"
                     >
                       Reschedule
+                    </button>
+                  </td>
+                  <td className="px-4 py-2">
+                    <button
+                      onClick={() => handleCancel(appointment.id)}
+                      className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                      disabled={cancelledAppointments.includes(appointment.id)}
+                    >
+                      {cancelledAppointments.includes(appointment.id)
+                        ? "Cancelled"
+                        : "Cancel"}
                     </button>
                   </td>
                 </tr>
@@ -265,4 +227,4 @@ const DoctorAppointments = () => {
   );
 };
 
-export default DoctorAppointments;
+export default PatientAppointments;
