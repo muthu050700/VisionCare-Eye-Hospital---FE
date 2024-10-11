@@ -41,13 +41,16 @@ const DoctorDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("http://localhost:4500/admin/users", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json;charset=utf-8",
-        },
-      });
+      const res = await fetch(
+        "https://visioncare-eye-hospital-be-ovt6.onrender.com/admin/users",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json;charset=utf-8",
+          },
+        }
+      );
       const data = await res.json();
       setDoctorData(data);
     } catch (error) {
