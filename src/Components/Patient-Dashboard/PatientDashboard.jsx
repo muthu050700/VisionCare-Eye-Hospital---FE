@@ -105,6 +105,7 @@ const PatientDashboard = () => {
     if (isEditing) {
       // Update patient
       try {
+        delete formData.confirmPassword;
         await handleRoleChangeApi(selectedPatient.id, { ...formData }); // API call to update role
         alert("Patient updated successfully");
         fetchData(); // Refresh data after update

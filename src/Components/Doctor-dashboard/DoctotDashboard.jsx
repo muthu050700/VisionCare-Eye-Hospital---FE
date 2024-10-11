@@ -27,11 +27,11 @@ const DoctorDashboard = () => {
 
   const token = localStorage.getItem("token");
   const doctorRoles = [
-    "ophthalmologist",
-    "surgeon",
-    "optometrist",
-    "consultant",
     "doctor",
+    "Optometrist",
+    "Ophthalmologist",
+    "Surgeon",
+    "Consultant",
   ];
 
   // Fetch doctor data once on mount
@@ -307,7 +307,7 @@ const DoctorDashboard = () => {
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-lg"
           >
-            <option value="">Select Role</option>
+            {/* <option value="select">Select Role</option> */}
             {doctorRoles.map((role) => (
               <option key={role} value={role}>
                 {role}
