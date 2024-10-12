@@ -202,53 +202,59 @@ const DoctorAppointments = () => {
                       : appointment.appointmentTime}
                   </td>
                   <td className="px-4 py-2">{appointment.appointmentType}</td>
-                  <td className="px-4 py-2">
-                    <select
-                      value={status[appointment.id] || appointment.status}
-                      onChange={(e) =>
-                        handleStatusChange(appointment.id, e.target.value)
-                      }
-                      className="px-2 py-1 border rounded"
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="approved">Approved</option>
-                      <option value="rejected">Rejected</option>
-                    </select>
-                    <button
-                      onClick={() => handleStatusUpdate(appointment.id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                      Update Status
-                    </button>
-                  </td>
+                  {appointment.status !== "Appointment cancelled" ? (
+                    <td className="px-4 py-2">
+                      <select
+                        value={status[appointment.id] || appointment.status}
+                        onChange={(e) =>
+                          handleStatusChange(appointment.id, e.target.value)
+                        }
+                        className="px-2 py-1 border rounded"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                      </select>
+                      <button
+                        onClick={() => handleStatusUpdate(appointment.id)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                      >
+                        Update Status
+                      </button>
+                    </td>
+                  ) : (
+                    <td>Appointment cancelled by patient</td>
+                  )}
 
-                  <td className="px-4 py-2">
-                    <input
-                      type="date"
-                      value={rescheduleDate[appointment.id] || ""}
-                      onChange={(e) =>
-                        handleRescheduleChange(appointment.id, e.target.value)
-                      }
-                      className="w-full px-2 py-1 border rounded"
-                    />
-                    <input
-                      type="time"
-                      value={rescheduleTime[appointment.id] || ""}
-                      onChange={(e) =>
-                        handleRescheduleTimeChange(
-                          appointment.id,
-                          e.target.value
-                        )
-                      }
-                      className="w-full px-2 py-1 border rounded mt-2"
-                    />
-                    <button
-                      onClick={() => handleReschedule(appointment.id)}
-                      className="bg-green-500 text-white mt-2 px-4 py-2 rounded hover:bg-green-600"
-                    >
-                      Reschedule
-                    </button>
-                  </td>
+                  {appointment.status !== "Appointment cancelled" && (
+                    <td className="px-4 py-2">
+                      <input
+                        type="date"
+                        value={rescheduleDate[appointment.id] || ""}
+                        onChange={(e) =>
+                          handleRescheduleChange(appointment.id, e.target.value)
+                        }
+                        className="w-full px-2 py-1 border rounded"
+                      />
+                      <input
+                        type="time"
+                        value={rescheduleTime[appointment.id] || ""}
+                        onChange={(e) =>
+                          handleRescheduleTimeChange(
+                            appointment.id,
+                            e.target.value
+                          )
+                        }
+                        className="w-full px-2 py-1 border rounded mt-2"
+                      />
+                      <button
+                        onClick={() => handleReschedule(appointment.id)}
+                        className="bg-green-500 text-white mt-2 px-4 py-2 rounded hover:bg-green-600"
+                      >
+                        Reschedule
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             ) : (

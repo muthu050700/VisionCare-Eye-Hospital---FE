@@ -120,6 +120,24 @@ const DoctorDashboard = () => {
         console.error("Error updating doctor:", error);
       }
     } else {
+      // Check if all fields are filled
+      if (
+        !formData.fullName ||
+        !formData.email ||
+        !formData.phoneNumber ||
+        !formData.address ||
+        !formData.dateOfBirth ||
+        !formData.gender ||
+        !formData.city ||
+        !formData.state ||
+        !formData.pinCode ||
+        !formData.medicalHistory ||
+        !formData.password ||
+        !formData.confirmPassword
+      ) {
+        alert("Please fill out all required fields.");
+        return; // Stop the submission
+      }
       // Add new doctor
       delete formData.confirmPassword;
       const res = await registerApi(formData);

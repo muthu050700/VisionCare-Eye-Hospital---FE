@@ -95,6 +95,7 @@ const Register = () => {
     }
 
     try {
+      role === "patient" ? "" : delete formDetails.medicalHistory;
       const { confirmPassword, ...userDetails } = formDetails; // Exclude confirmPassword from API payload
       const res = await registerApi(userDetails, role); // Use the selected role directly
 
@@ -136,7 +137,6 @@ const Register = () => {
               required
             />
           </div>
-
           {/* Email */}
           <div>
             <label className="block font-medium text-gray-700">Email:</label>
@@ -153,7 +153,6 @@ const Register = () => {
               <p className="text-red-500 mt-1">{errorMessage}</p>
             )}
           </div>
-
           {/* Phone Number */}
           <div>
             <label className="block font-medium text-gray-700">
@@ -168,7 +167,6 @@ const Register = () => {
               required
             />
           </div>
-
           {/* Password */}
           <label className="block font-medium text-gray-700">Password:</label>
           <input
@@ -180,7 +178,6 @@ const Register = () => {
             }`}
             onChange={(e) => handleFormChange(e)}
           />
-
           <label className="block font-medium text-gray-700">
             Confirm Password:
           </label>
@@ -199,7 +196,6 @@ const Register = () => {
           {errorMessage === "Password is not valid" && (
             <p className="text-red-500">{errorMessage}</p>
           )}
-
           {/* Role */}
           <label className="block font-medium text-gray-700">Role:</label>
           <select
@@ -239,7 +235,6 @@ const Register = () => {
               <p className="text-red-500">{errorMessage}</p>
             )}
           </div>
-
           {/* Gender */}
           <div>
             <label className="block font-medium text-gray-700">Gender:</label>
@@ -252,7 +247,6 @@ const Register = () => {
               required
             />
           </div>
-
           {/* Address */}
           <div>
             <label className="block font-medium text-gray-700">Address:</label>
@@ -265,7 +259,6 @@ const Register = () => {
               required
             />
           </div>
-
           {/* City */}
           <div>
             <label className="block font-medium text-gray-700">City:</label>
@@ -278,7 +271,6 @@ const Register = () => {
               required
             />
           </div>
-
           {/* State */}
           <div>
             <label className="block font-medium text-gray-700">State:</label>
@@ -291,7 +283,6 @@ const Register = () => {
               required
             />
           </div>
-
           {/* Pin Code */}
           <div>
             <label className="block font-medium text-gray-700">Pin Code:</label>
@@ -304,21 +295,21 @@ const Register = () => {
               required
             />
           </div>
-
           {/* Medical History */}
-          <div>
-            <label className="block font-medium text-gray-700">
-              Medical History:
-            </label>
-            <textarea
-              name="medicalHistory"
-              value={formDetails.medicalHistory}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              onChange={(e) => handleFormChange(e)}
-              required
-            />
-          </div>
-
+          {role === "patient" && (
+            <div>
+              <label className="block font-medium text-gray-700">
+                Medical History:
+              </label>
+              <textarea
+                name="medicalHistory"
+                value={formDetails.medicalHistory}
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                onChange={(e) => handleFormChange(e)}
+                required={role === "patient"} // Required only if patient role is selected
+              />
+            </div>
+          )}
           {/* Submit Button */}
           <div className="text-center">
             <button

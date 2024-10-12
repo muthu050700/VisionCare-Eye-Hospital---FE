@@ -111,16 +111,19 @@ const PatientAppointments = () => {
   // Handle cancellation of an appointment
   const handleCancel = async (appointmentId) => {
     try {
-      const res = await fetch(`${BE_URL}/patient/cancel/${appointmentId}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json;charset=utf-8",
-        },
-      });
+      const res = await fetch(
+        `${BE_URL}/book-appointment/patient/cancel/${appointmentId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json;charset=utf-8",
+          },
+        }
+      );
 
       const data = await res.json();
-      if (data.success) {
+      if (data.msg) {
         alert("Appointment cancelled successfully!");
         setCancelledAppointments([...cancelledAppointments, appointmentId]);
         fetchData();
@@ -172,43 +175,64 @@ const PatientAppointments = () => {
                       : appointment.appointmentTime}
                   </td>
                   <td className="px-4 py-2">{appointment.appointmentType}</td>
-                  <td className="px-4 py-2">{appointment.status}</td>
-                  <td className="px-4 py-2">
-                    <input
-                      type="date"
-                      value={rescheduleDate[appointment.id] || ""}
-                      onChange={(e) =>
-                        handleRescheduleChange(appointment.id, e.target.value)
-                      }
-                      className="w-full px-2 py-1 border rounded"
-                    />
-                    <input
-                      type="time"
-                      value={rescheduleTime[appointment.id] || ""}
-                      onChange={(e) =>
-                        handleRescheduleTimeChange(
-                          appointment.id,
-                          e.target.value
-                        )
-                      }
-                      className="w-full px-2 py-1 border rounded"
-                    />
-                    <button
-                      onClick={() => handleReschedule(appointment.id)}
-                      className="bg-green-500 text-white mt-2 px-4 py-2 rounded hover:bg-green-600"
+                  <td className={`px-4 py-2`}>
+                    <p
+                      className={`${
+                        appointment.status === "approved"
+                          ? " bg-green-800 h-fit px-2 py-2 "
+                          : "bg-red-700 h-fit px-2 py-2 rounded-sm"
+                      }`}
                     >
-                      Reschedule
-                    </button>
+                      {" "}
+                      {appointment.status}
+                    </p>
                   </td>
+                  {appointment.status !== "Appointment cancelled" ? (
+                    <td className="px-4 py-2">
+                      <input
+                        type="date"
+                        value={rescheduleDate[appointment.id] || ""}
+                        onChange={(e) =>
+                          handleRescheduleChange(appointment.id, e.target.value)
+                        }
+                        className="w-full px-2 py-1 border rounded"
+                      />
+                      <input
+                        type="time"
+                        value={rescheduleTime[appointment.id] || ""}
+                        onChange={(e) =>
+                          handleRescheduleTimeChange(
+                            appointment.id,
+                            e.target.value
+                          )
+                        }
+                        className="w-full px-2 py-1 border rounded"
+                      />
+                      <button
+                        onClick={() => handleReschedule(appointment.id)}
+                        className="bg-green-500 text-white mt-2 px-4 py-2 rounded hover:bg-green-600"
+                      >
+                        Reschedule
+                      </button>
+                    </td>
+                  ) : (
+                    <td>
+                      After cancelled the appointment you can't reschedule
+                    </td>
+                  )}
+
                   <td className="px-4 py-2">
                     <button
                       onClick={() => handleCancel(appointment.id)}
                       className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
                       disabled={cancelledAppointments.includes(appointment.id)}
                     >
-                      {cancelledAppointments.includes(appointment.id)
+                      {appointment.status === "Appointment cancelled"
                         ? "Cancelled"
                         : "Cancel"}
+                      {/* {cancelledAppointments.includes(appointment.id)
+                        ? "Cancelled"
+                        : "Cancel"} */}
                     </button>
                   </td>
                 </tr>

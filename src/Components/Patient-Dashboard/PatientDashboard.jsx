@@ -22,7 +22,7 @@ const PatientDashboard = () => {
     state: "",
     pinCode: "",
     medicalHistory: "",
-    role: "patient",
+    role: "",
     password: "", // Add password field
     confirmPassword: "", // Add confirm password field
   });
@@ -127,6 +127,24 @@ const PatientDashboard = () => {
         console.error("Error updating patient:", error);
       }
     } else {
+      // Check if all fields are filled
+      if (
+        !formData.fullName ||
+        !formData.email ||
+        !formData.phoneNumber ||
+        !formData.address ||
+        !formData.dateOfBirth ||
+        !formData.gender ||
+        !formData.city ||
+        !formData.state ||
+        !formData.pinCode ||
+        !formData.medicalHistory ||
+        !formData.password ||
+        !formData.confirmPassword
+      ) {
+        alert("Please fill out all required fields.");
+        return; // Stop the submission
+      }
       if (formData.password !== formData.confirmPassword) {
         alert("Passwords do not match!");
         return;
@@ -223,13 +241,13 @@ const PatientDashboard = () => {
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
-          shouldCloseOnOverlayClick={true} // Close on outside click
+          shouldCloseOnOverlayClick={true}
           contentLabel={isEditing ? "Edit Patient" : "Add Patient"}
           className="p-5 bg-white max-w-lg mx-auto mt-10 rounded-lg shadow-lg"
           style={{
             content: {
-              maxHeight: "80vh", // Limit height to 80% of the viewport
-              overflowY: "auto", // Enable scrolling when content exceeds height
+              maxHeight: "80vh",
+              overflowY: "auto",
             },
           }}
         >
@@ -249,6 +267,7 @@ const PatientDashboard = () => {
               value={formData.fullName}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-lg"
+              required
             />
             <input
               type="email"
@@ -257,6 +276,7 @@ const PatientDashboard = () => {
               value={formData.email}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-lg"
+              required
             />
             <input
               type="text"
@@ -265,6 +285,7 @@ const PatientDashboard = () => {
               value={formData.phoneNumber}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-lg"
+              required
             />
             <input
               type="text"
@@ -273,6 +294,7 @@ const PatientDashboard = () => {
               value={formData.address}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-lg"
+              required
             />
             <input
               type="date"
@@ -280,12 +302,14 @@ const PatientDashboard = () => {
               value={formData.dateOfBirth}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-lg"
+              required
             />
             <select
               name="gender"
               value={formData.gender}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-lg"
+              required
             >
               <option value="">Select Gender</option>
               <option value="male">Male</option>
@@ -299,6 +323,7 @@ const PatientDashboard = () => {
               value={formData.city}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-lg"
+              required
             />
             <input
               type="text"
@@ -307,6 +332,7 @@ const PatientDashboard = () => {
               value={formData.state}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-lg"
+              required
             />
             <input
               type="text"
@@ -315,6 +341,7 @@ const PatientDashboard = () => {
               value={formData.pinCode}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-lg"
+              required
             />
             <textarea
               name="medicalHistory"
@@ -322,6 +349,7 @@ const PatientDashboard = () => {
               value={formData.medicalHistory}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-lg"
+              required
             ></textarea>
 
             {/* New Password Fields */}
