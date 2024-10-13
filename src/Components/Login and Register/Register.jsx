@@ -290,6 +290,17 @@ const Register = () => {
               <option value="other">Other</option>
             </select>
           </div>
+          <div>
+            <label className="block font-medium text-gray-700">Address:</label>
+            <input
+              type="text"
+              name="city"
+              value={formDetails.address}
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              onChange={handleFormChange}
+              required
+            />
+          </div>
           {/* City */}
           <div>
             <label className="block font-medium text-gray-700">City:</label>

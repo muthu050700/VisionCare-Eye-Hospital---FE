@@ -1,152 +1,104 @@
-import React, { useContext } from "react";
-import { userRoleContext } from "../Context/Context"; // Assuming context is set up
+import React from "react";
 
 const About = () => {
-  const { userRole } = useContext(userRoleContext);
-
-  const adminContent = (
-    <div className="flex flex-col items-center space-y-6">
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden max-w-sm">
-        <img
-          src="https://via.placeholder.com/400x200.png?text=Admin+Management"
-          alt="Admin Management"
-          className="w-full"
-        />
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-4">Admin Management</h2>
-          <p className="text-gray-600">
-            Our administrative team ensures smooth and efficient hospital
-            operations, handling all management tasks, including system roles,
-            permissions, and hospital services.
-          </p>
-        </div>
-      </div>
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden max-w-sm">
-        <img
-          src="https://via.placeholder.com/400x200.png?text=Role+Assignment"
-          alt="Role Assignment"
-          className="w-full"
-        />
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-4">Role Assignment</h2>
-          <p className="text-gray-600">
-            Admins can assign roles to new staff, oversee daily operations, and
-            manage doctor-patient interactions to maintain high-quality care.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-
-  const doctorContent = (
-    <div className="flex flex-col items-center space-y-6">
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden max-w-sm">
-        <img
-          src="https://via.placeholder.com/400x200.png?text=Doctor+Excellence"
-          alt="Doctor Excellence"
-          className="w-full"
-        />
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-4">Excellence in Care</h2>
-          <p className="text-gray-600">
-            Our doctors specialize in cutting-edge eye care treatments, focusing
-            on cataracts, glaucoma, and other conditions to ensure the best
-            patient outcomes.
-          </p>
-        </div>
-      </div>
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden max-w-sm">
-        <img
-          src="https://via.placeholder.com/400x200.png?text=Patient+Appointments"
-          alt="Patient Appointments"
-          className="w-full"
-        />
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-4">Patient Appointments</h2>
-          <p className="text-gray-600">
-            Our medical staff manages appointments efficiently, ensuring each
-            patient receives the care they need when they need it most.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-
-  const userContent = (
-    <div className="flex flex-col items-center space-y-6">
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden max-w-sm">
-        <img
-          src="https://via.placeholder.com/400x200.png?text=Quality+Care"
-          alt="Quality Care"
-          className="w-full"
-        />
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-4">Compassionate Care</h2>
-          <p className="text-gray-600">
-            As patients, we prioritize your health and well-being. Our facility
-            provides the highest level of care to all patients in need of eye
-            care services.
-          </p>
-        </div>
-      </div>
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden max-w-sm">
-        <img
-          src="https://via.placeholder.com/400x200.png?text=Advanced+Technology"
-          alt="Advanced Technology"
-          className="w-full"
-        />
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-4">Advanced Technology</h2>
-          <p className="text-gray-600">
-            Our hospital utilizes the latest in medical technology, ensuring
-            precise and safe treatment for all patients.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderContent = () => {
-    switch (userRole) {
-      case "admin":
-        return adminContent;
-      case "doctor":
-        return doctorContent;
-      case "user":
-      default:
-        return userContent;
-    }
-  };
-
   return (
-    <div className="relative min-h-screen bg-gray-100 py-12">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url('https://via.placeholder.com/1920x1080.png?text=Hospital+Background')`,
-          opacity: 0.3,
-        }}
-      ></div>
-      <div className="relative z-10 max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-blue-800">
-            About Us -{" "}
-            {userRole === "admin"
-              ? "Administration"
-              : userRole === "doctor"
-              ? "Doctors"
-              : "Patients"}
+    <>
+      {/* Section 1: Welcome Section */}
+      <div className="flex flex-col lg:flex-row items-center justify-between max-w-6xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden my-12">
+        {/* Left Side - Image */}
+        <div className="lg:w-1/2 w-full">
+          <img
+            src="https://img.freepik.com/free-photo/analog-city-landscape-with-buildings-daylight_23-2149661433.jpg?t=st=1728854091~exp=1728857691~hmac=745dcc56ed1c58ff42f4830cdada0bcc10b3fd33697f008606829a306950e2c5&w=996"
+            alt="About Kiruthika Eye Care Hospital"
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        {/* Right Side - Content */}
+        <div className="lg:w-1/2 w-full p-8 lg:p-12 space-y-6">
+          <h1 className="text-3xl lg:text-4xl font-bold text-blue-600">
+            Welcome To VS Kiruthika Eye Care Hospitals
           </h1>
-          <p className="mt-4 text-gray-700 text-lg">
-            Learn more about our hospital services and the dedicated team that
-            makes it all possible.
+          <p className="text-lg text-gray-700">
+            Our patients are our top priority. We provide exceptional medical
+            care with a dedicated team of specialists committed to delivering
+            the highest standards of healthcare.
+          </p>
+          <p className="text-lg text-gray-700">
+            Our mission is to enhance the well-being of our community by
+            offering advanced medical services in a compassionate, welcoming
+            environment. Whether you’re here for a routine check-up or
+            specialized treatment, we ensure personalized care that meets your
+            individual needs.
+          </p>
+          <p className="text-lg text-gray-700">
+            On behalf of all our doctors, nurses, and staff, we warmly welcome
+            you to our hospital. We are privileged to support you in your
+            healthcare journey. Our goal is to offer the most up-to-date
+            treatments, utilizing the latest medical technology to ensure you
+            receive the best care possible.
+          </p>
+          <p className="text-lg text-gray-700">
+            We are here to help you achieve optimal health and recovery, and we
+            strive to provide an outstanding patient experience in every aspect
+            of your visit.
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {renderContent()}
+      </div>
+
+      {/* Section 2: Visual and Informational Section */}
+      <div className="flex justify-center">
+        {" "}
+        <div className="flex flex-col w-full xl:flex-row gap-10 xl:max-w-[1400px] xl:h-[600px] px-4 xl:px-0 my-12">
+          {/* Left Side - Images */}
+          <div className="flex flex-col md:w-full xl:w-[600px] md:h-[600px] xl:h-auto items-start relative gap-6">
+            <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px]">
+              <img
+                src="https://img.freepik.com/free-photo/eye-doctor-with-female-patient-examination-modern-clinic-ophthalmologist-is-using-special-medical-equipment-eye-health_657921-161.jpg?ga=GA1.1.1839056023.1727741580&semt=ais_hybrid"
+                className="rounded-lg shadow-md object-cover w-full h-full"
+              />
+            </div>
+            <div className="relative w-[300px] h-[300px] md:w-[400px] md:h-[400px] self-end">
+              <img
+                src="https://img.freepik.com/free-photo/woman-checking-some-new-glasses_23-2149082473.jpg?ga=GA1.1.1839056023.1727741580"
+                className="rounded-lg shadow-md object-cover w-full h-full"
+              />
+            </div>
+          </div>
+
+          {/* Right Side - Informational Content */}
+          <div className="flex justify-center bg-gradient-to-r from-blue-50 to-blue-100 p-8 rounded-lg shadow-lg">
+            <div className="bg-white md:xl:w-[600px] xl:w-[700px] md:h-[600px] p-8 rounded-lg shadow-xl">
+              <h1 className="font-bold text-2xl md:text-3xl xl:text-4xl pb-5 text-center text-blue-800">
+                Kiruthika Eye Care: A Vision for Excellence
+              </h1>
+              <div className="flex flex-col gap-6 text-gray-700 leading-relaxed">
+                <p>
+                  Kiruthika Eye Care Hospitals is a trusted name in eye health,
+                  built on a legacy of outstanding ophthalmic care. With
+                  state-of-the-art technology and a patient-centric approach, we
+                  provide world-class eye care services to people from all walks
+                  of life.
+                </p>
+                <p>
+                  Our hospital was founded by Dr. Kiruthika Subramanian, a
+                  renowned ophthalmologist with a passion for advancing eye care
+                  and helping patients achieve their best vision. Her expertise
+                  and dedication have shaped Kiruthika Eye Care into a leading
+                  center for eye treatment and surgery.
+                </p>
+                <p>
+                  From routine eye exams to complex surgeries, we are committed
+                  to offering innovative treatments and personalized care,
+                  ensuring that our patients experience the best possible
+                  outcomes in their eye health journey.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

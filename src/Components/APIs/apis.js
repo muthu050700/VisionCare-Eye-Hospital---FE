@@ -96,6 +96,7 @@ export const deleteUserApi = async (id) => {
 //
 
 export const profileApi = async (userId, user) => {
+  console.log(userId);
   try {
     const res = await fetch(`${BE_URL}/profile/user-profile-update/${userId}`, {
       method: "PUT",

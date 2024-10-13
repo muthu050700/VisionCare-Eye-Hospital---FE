@@ -11,7 +11,7 @@ const Profile = () => {
   const [isEditable, setIsEditable] = useState(false);
   const { userRole, userId } = useContext(userRoleContext); // used a user role context
   const doctorRoles = ["cataracts", "glaucoma", "macular degeneration"];
-
+  console.log(userId);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -20,7 +20,9 @@ const Profile = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        console.log(data);
         data.map((d) => {
+          console.log(d.id === userId);
           d.id === userId && setUser(d);
         });
 
@@ -37,17 +39,13 @@ const Profile = () => {
 
     fetchUserData();
   }, []);
-
+  console.log(user);
   // Function to handle profile update for doctor or admin
-  const handleProfileUpdate = async (userID, user) => {
+  const handleProfileUpdate = async () => {
+    console.log(user, userId);
     try {
-      const response = await profileApi(userID, user);
-
-      if (!response.ok) {
-        throw new Error("Profile update failed");
-      }
-
-      alert("Profile updated successfully!");
+      const response = await profileApi(userId, user);
+      alert("Profile updated successfully");
     } catch (error) {
       setError(error);
     }
