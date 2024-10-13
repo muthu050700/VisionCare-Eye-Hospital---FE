@@ -3,6 +3,7 @@ import { createAppointment } from "../APIs/apis";
 import { doctorContext } from "../Context/Context";
 import { userRoleContext } from "../Context/Context";
 import appointmentSvg from "../../assets/appointment.svg";
+
 const initialFormData = {
   fullName: "",
   dateOfBirth: "",
@@ -11,9 +12,9 @@ const initialFormData = {
   address: "",
   doctorId: "Not assigned yet",
   appointmentDate: "",
-  appointmentTime: "", // Add appointmentTime to the state
-  appointmentType: "In-person", // Default to In-person consultation
-  status: "Pending", // Default status when booking an appointment
+  appointmentTime: "",
+  appointmentType: "In-person",
+  status: "Pending",
 };
 
 const BookAppointment = () => {
@@ -23,7 +24,6 @@ const BookAppointment = () => {
   const { userId } = useContext(userRoleContext);
   const patientId = userId;
 
-  // Function to validate that the patient is at least 18 years old
   const isValidAge = (dateOfBirth) => {
     const today = new Date();
     const birthDate = new Date(dateOfBirth);
@@ -38,14 +38,12 @@ const BookAppointment = () => {
     return age;
   };
 
-  // Function to ensure the appointment date is today or a future date
   const isValidAppointmentDate = (appointmentDate) => {
     const today = new Date();
     const selectedDate = new Date(appointmentDate);
-    return selectedDate >= today.setHours(0, 0, 0, 0); // Set time to midnight for date comparison
+    return selectedDate >= today.setHours(0, 0, 0, 0);
   };
 
-  // Handle input changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -53,24 +51,21 @@ const BookAppointment = () => {
     });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate the age
     if (isValidAge(formData.dateOfBirth) < 18) {
       alert("You must be at least 18 years old to book an appointment.");
       return;
     }
 
-    // Validate the appointment date
     if (!isValidAppointmentDate(formData.appointmentDate)) {
       alert("You can only book appointments for today or future dates.");
       return;
     }
 
     try {
-      const res = await createAppointment({ formData, patientId }); // Make the API call
+      const res = await createAppointment({ formData, patientId });
       alert(res.msg);
       setFormData(initialFormData);
     } catch (e) {
@@ -82,14 +77,18 @@ const BookAppointment = () => {
   if (doctorData === null) return null;
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gray-100">
       {/* SVG Section */}
-      <div className="hidden lg:block">
-        <img src={appointmentSvg} alt="Login" className="h-full" />
+      <div className="hidden lg:block lg:w-1/2">
+        <img
+          src={appointmentSvg}
+          alt="Appointment"
+          className="h-full object-cover"
+        />
       </div>
 
       {/* Form Section */}
-      <div className="w-1/2 p-6 bg-white shadow-md rounded-lg">
+      <div className="w-full lg:w-1/2 p-6 bg-white shadow-md rounded-lg">
         <h2 className="text-2xl font-bold mb-6">Book an Appointment</h2>
         <form onSubmit={handleSubmit}>
           {/* Full Name */}
