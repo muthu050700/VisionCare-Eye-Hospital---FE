@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import { userRoleContext } from "../Context/Context";
 const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
 const token = localStorage.getItem("token");
 
@@ -9,18 +10,9 @@ const PatientAppointments = () => {
   const [rescheduleDate, setRescheduleDate] = useState({});
   const [rescheduleTime, setRescheduleTime] = useState({});
   const [cancelledAppointments, setCancelledAppointments] = useState([]);
+  const { userId } = useContext(userRoleContext);
 
-  // Get patient ID from the JWT token
-  const getPatientId = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      return decodedToken.id;
-    }
-    return null;
-  };
-
-  const patientId = getPatientId();
+  const patientId = userId;
 
   // Fetch appointments when patientId is available
   useEffect(() => {

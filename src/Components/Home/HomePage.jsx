@@ -1,6 +1,7 @@
 import { bg_Image } from "../../Utils/HeaderConstant";
 import { findHospital } from "../../Utils/HomePageConstant";
-
+import InfoCards from "./InfoCards";
+import Service from "./Service";
 const HomePage = () => {
   return (
     <div>
@@ -35,6 +36,9 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+      {/* Info cards component */}
+      <InfoCards />
+      <Service />
     </div>
   );
 };

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import { useContext, useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { userRoleContext } from "../Context/Context";
 const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
 const token = localStorage.getItem("token");
 
@@ -9,19 +10,10 @@ const DoctorAppointments = () => {
   const [rescheduleDate, setRescheduleDate] = useState({});
   const [rescheduleTime, setRescheduleTime] = useState({});
   const [status, setStatus] = useState({});
+  const { pathname } = useLocation();
+  const { userId } = useContext(userRoleContext);
+  const doctorId = userId;
 
-  // Get doctor ID from the JWT token
-  const getDoctorId = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      return decodedToken.id;
-    }
-    return null;
-  };
-
-  const doctorId = getDoctorId();
-  console.log(doctorId);
   // Fetch appointments when doctorId is available
   useEffect(() => {
     if (doctorId) {
@@ -213,7 +205,9 @@ const DoctorAppointments = () => {
                       >
                         <option value="pending">Pending</option>
                         <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
+                        <option value="close appointment">
+                          Close Appoinment
+                        </option>
                       </select>
                       <button
                         onClick={() => handleStatusUpdate(appointment.id)}
@@ -226,34 +220,91 @@ const DoctorAppointments = () => {
                     <td>Appointment cancelled by patient</td>
                   )}
 
-                  {appointment.status !== "Appointment cancelled" && (
+                  {appointment.status !== "Appointment cancelled" ? (
                     <td className="px-4 py-2">
-                      <input
-                        type="date"
-                        value={rescheduleDate[appointment.id] || ""}
-                        onChange={(e) =>
-                          handleRescheduleChange(appointment.id, e.target.value)
-                        }
-                        className="w-full px-2 py-1 border rounded"
-                      />
-                      <input
-                        type="time"
-                        value={rescheduleTime[appointment.id] || ""}
-                        onChange={(e) =>
-                          handleRescheduleTimeChange(
-                            appointment.id,
-                            e.target.value
-                          )
-                        }
-                        className="w-full px-2 py-1 border rounded mt-2"
-                      />
-                      <button
-                        onClick={() => handleReschedule(appointment.id)}
-                        className="bg-green-500 text-white mt-2 px-4 py-2 rounded hover:bg-green-600"
-                      >
-                        Reschedule
-                      </button>
+                      {appointment.status === "pending" ? (
+                        <>
+                          <input
+                            type="date"
+                            value={rescheduleDate[appointment.id] || ""}
+                            onChange={(e) =>
+                              handleRescheduleChange(
+                                appointment.id,
+                                e.target.value
+                              )
+                            }
+                            className="w-full px-2 py-1 border rounded"
+                          />
+                          <input
+                            type="time"
+                            value={rescheduleTime[appointment.id] || ""}
+                            onChange={(e) =>
+                              handleRescheduleTimeChange(
+                                appointment.id,
+                                e.target.value
+                              )
+                            }
+                            className="w-full px-2 py-1 border rounded mt-2"
+                          />
+                          <button
+                            onClick={() => handleReschedule(appointment.id)}
+                            className="bg-green-500 text-white mt-2 px-4 py-2 rounded hover:bg-green-600"
+                          >
+                            Reschedule
+                          </button>
+                        </>
+                      ) : appointment.status === "approved" ? (
+                        <p>You have approved the appointment</p>
+                      ) : appointment.status === "close appointment" ? (
+                        <>
+                          {" "}
+                          <Link
+                            to="/patient-record-form"
+                            className={
+                              pathname === "/patient-record-form"
+                                ? " border-b-4 border-orange-500"
+                                : undefined
+                            }
+                          >
+                            {" "}
+                            <p>Create record</p>
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          <input
+                            type="date"
+                            value={rescheduleDate[appointment.id] || ""}
+                            onChange={(e) =>
+                              handleRescheduleChange(
+                                appointment.id,
+                                e.target.value
+                              )
+                            }
+                            className="w-full px-2 py-1 border rounded"
+                          />
+                          <input
+                            type="time"
+                            value={rescheduleTime[appointment.id] || ""}
+                            onChange={(e) =>
+                              handleRescheduleTimeChange(
+                                appointment.id,
+                                e.target.value
+                              )
+                            }
+                            className="w-full px-2 py-1 border rounded mt-2"
+                          />
+                          <button
+                            onClick={() => handleReschedule(appointment.id)}
+                            className="bg-green-500 text-white mt-2 px-4 py-2 rounded hover:bg-green-600"
+                          >
+                            Reschedule
+                          </button>
+                        </>
+                      )}
                     </td>
+                  ) : (
+                    "Appointment Cancelled"
                   )}
                 </tr>
               ))

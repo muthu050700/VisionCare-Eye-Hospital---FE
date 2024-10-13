@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { registerApi } from "../APIs/apis";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { checkValidData } from "./validate";
+import registerSvg from "../../assets/register.svg";
+
 const initialFormDetails = {
   fullName: "",
   phoneNumber: "",
@@ -15,20 +17,18 @@ const initialFormDetails = {
   pinCode: "",
   email: "",
   medicalHistory: "",
+  role: "patient", // Added role field
 };
 
 const Register = () => {
-  //Form Details
+  // Form Details
   const [formDetails, setFormDetails] = useState(initialFormDetails);
   // Form Email and password error
   const [errorMessage, setErrorMessage] = useState(null);
-  //navigate
+  // navigate
   const navigate = useNavigate();
-  //For Role
-  const [role, setRole] = useState("option");
-  // is auth
-  const isAuthenticated = Boolean(localStorage.getItem("userType"));
-  // handle change in form field details
+  // Tab state
+  const [activeTab, setActiveTab] = useState("patient");
 
   const checkAge = (dateOfBirth) => {
     const dob = new Date(dateOfBirth);
@@ -41,7 +41,6 @@ const Register = () => {
       return "Enter valid date";
     }
 
-    // If age is less than 18, return an error message
     if (age < 18) {
       return "You must be at least 18 years old to register.";
     }
@@ -52,58 +51,74 @@ const Register = () => {
   const handleFormChange = (e) => {
     setFormDetails({
       ...formDetails,
-      role: role,
       [e.target.name]: e.target.value,
     });
   };
 
-  //Handle form submit
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setFormDetails({
+      ...formDetails,
+      role: tab === "doctor" ? formDetails.specialization : tab, // Assign role based on tab or specialization
+    });
+  };
+
+  const handleSpecializationChange = (e) => {
+    const specialization = e.target.value;
+    setFormDetails({
+      ...formDetails,
+      specialization,
+      role: specialization, // Assign specialization to role
+    });
+  };
+
+  // Handle form submit
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
-    // Reset error message initially
     setErrorMessage("");
 
-    // Validate email and password
     const validationMessage = checkValidData(
       formDetails.email,
       formDetails.password
     );
-    console.log("validationMessage", validationMessage);
     if (validationMessage) {
       setErrorMessage(validationMessage);
       return;
     }
-    console.log(formDetails.password !== formDetails.confirmPassword);
-    // Ensure passwords match
+
     if (formDetails.password !== formDetails.confirmPassword) {
       setErrorMessage("Passwords do not match");
       return;
     }
 
-    // Ensure a role is selected
-    if (role === "option") {
-      setErrorMessage("Please select a valid role");
+    if (activeTab === "patient" && !formDetails.medicalHistory) {
+      setErrorMessage("Medical history is required for patients");
       return;
     }
-    // Validate age (only allow registration if user is 18 or older)
+
     const ageValidationMessage = checkAge(formDetails.dateOfBirth);
-    console.log(ageValidationMessage);
     if (ageValidationMessage) {
       setErrorMessage(ageValidationMessage);
       return;
     }
 
     try {
-      role === "patient" ? "" : delete formDetails.medicalHistory;
-      const { confirmPassword, ...userDetails } = formDetails; // Exclude confirmPassword from API payload
-      const res = await registerApi(userDetails, role); // Use the selected role directly
+      const {
+        confirmPassword,
+        specialization,
+        medicalHistory,
+        ...userDetails
+      } = formDetails;
+      const res = await registerApi(userDetails, formDetails.role);
 
-      // Check if profile is already registered
       if (res.status === 409) {
         setErrorMessage(res.msg);
       } else {
-        alert(`${role} profile registered successfully`);
+        alert(
+          `${
+            formDetails.role.charAt(0).toUpperCase() + formDetails.role.slice(1)
+          } profile registered successfully`
+        );
         navigate("/login");
       }
     } catch (error) {
@@ -114,14 +129,46 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="px-6 py-8 bg-white shadow-md rounded-md w-full max-w-lg">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-end">
+      <div className="hidden lg:block">
+        <img src={registerSvg} alt="Register" className="h-full" />
+      </div>
+      <div className="px-6 py-8 bg-white shadow-md rounded-md w-full max-w-lg mr-4">
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
           Create Your Profile
         </h1>
-        <p className="text-center text-gray-600 mb-8">
-          Patients are required to register their information on this form.
-        </p>
+        <div className="flex justify-center mb-4">
+          <button
+            onClick={() => handleTabChange("patient")}
+            className={`px-4 py-2 rounded-l-lg ${
+              activeTab === "patient"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            Patient
+          </button>
+          <button
+            onClick={() => handleTabChange("doctor")}
+            className={`px-4 py-2 ${
+              activeTab === "doctor"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            Doctor
+          </button>
+          <button
+            onClick={() => handleTabChange("admin")}
+            className={`px-4 py-2 rounded-r-lg ${
+              activeTab === "admin"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            Admin
+          </button>
+        </div>
         <form className="space-y-5" onSubmit={handleFormSubmit}>
           {/* Full Name */}
           <div>
@@ -133,7 +180,7 @@ const Register = () => {
               name="fullName"
               value={formDetails.fullName}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              onChange={(e) => handleFormChange(e)}
+              onChange={handleFormChange}
               required
             />
           </div>
@@ -147,7 +194,7 @@ const Register = () => {
               className={`w-full border border-gray-300 rounded-lg p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errorMessage === "Email is not valid" ? "border-red-500" : ""
               }`}
-              onChange={(e) => handleFormChange(e)}
+              onChange={handleFormChange}
             />
             {errorMessage === "Email is not valid" && (
               <p className="text-red-500 mt-1">{errorMessage}</p>
@@ -163,7 +210,7 @@ const Register = () => {
               name="phoneNumber"
               value={formDetails.phoneNumber}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              onChange={(e) => handleFormChange(e)}
+              onChange={handleFormChange}
               required
             />
           </div>
@@ -176,7 +223,7 @@ const Register = () => {
             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${
               errorMessage === "Passwords do not match" ? "border-red-500" : ""
             }`}
-            onChange={(e) => handleFormChange(e)}
+            onChange={handleFormChange}
           />
           <label className="block font-medium text-gray-700">
             Confirm Password:
@@ -188,31 +235,30 @@ const Register = () => {
             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${
               errorMessage === "Passwords do not match" ? "border-red-500" : ""
             }`}
-            onChange={(e) => handleFormChange(e)}
+            onChange={handleFormChange}
           />
           {errorMessage === "Passwords do not match" && (
             <p className="text-red-500">{errorMessage}</p>
           )}
-          {errorMessage === "Password is not valid" && (
-            <p className="text-red-500">{errorMessage}</p>
-          )}
-          {/* Role */}
-          <label className="block font-medium text-gray-700">Role:</label>
-          <select
-            className={`w-full px-3 py-2 bg-gray-100 border rounded-lg focus:outline-none focus:ring focus:border-blue-300 ${
-              errorMessage === "Please select a valid role"
-                ? "border-red-500"
-                : ""
-            }`}
-            onChange={(e) => setRole(e.target.value)}
-          >
-            <option value="option">Select an option</option>
-            <option value="patient">Patient</option>
-            <option value="doctor">Doctor</option>
-            <option value="admin">Admin</option>
-          </select>
-          {errorMessage === "Please select a valid role" && (
-            <p className="text-red-500">{errorMessage}</p>
+          {/* Role and Conditional Fields */}
+          {activeTab === "doctor" && (
+            <>
+              <label className="block font-medium text-gray-700">
+                Specialization:
+              </label>
+              <select
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                onChange={handleSpecializationChange}
+                required
+              >
+                <option value="">Select Specialization</option>
+                <option value="cataracts">Cataracts</option>
+                <option value="glaucoma">Glaucoma</option>
+                <option value="macular degeneration">
+                  Macular Degeneration
+                </option>
+              </select>
+            </>
           )}
           {/* Date of Birth */}
           <div>
@@ -224,40 +270,25 @@ const Register = () => {
               name="dateOfBirth"
               value={formDetails.dateOfBirth}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              onChange={(e) => handleFormChange(e)}
+              onChange={handleFormChange}
               required
             />
-            {errorMessage ===
-              "You must be at least 18 years old to register." && (
-              <p className="text-red-500">{errorMessage}</p>
-            )}
-            {errorMessage === "Enter valid date" && (
-              <p className="text-red-500">{errorMessage}</p>
-            )}
           </div>
           {/* Gender */}
           <div>
             <label className="block font-medium text-gray-700">Gender:</label>
-            <input
-              type="text"
+            <select
               name="gender"
               value={formDetails.gender}
+              onChange={handleFormChange}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              onChange={(e) => handleFormChange(e)}
               required
-            />
-          </div>
-          {/* Address */}
-          <div>
-            <label className="block font-medium text-gray-700">Address:</label>
-            <input
-              type="text"
-              name="address"
-              value={formDetails.address}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              onChange={(e) => handleFormChange(e)}
-              required
-            />
+            >
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
           </div>
           {/* City */}
           <div>
@@ -267,7 +298,7 @@ const Register = () => {
               name="city"
               value={formDetails.city}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              onChange={(e) => handleFormChange(e)}
+              onChange={handleFormChange}
               required
             />
           </div>
@@ -279,7 +310,7 @@ const Register = () => {
               name="state"
               value={formDetails.state}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              onChange={(e) => handleFormChange(e)}
+              onChange={handleFormChange}
               required
             />
           </div>
@@ -287,16 +318,16 @@ const Register = () => {
           <div>
             <label className="block font-medium text-gray-700">Pin Code:</label>
             <input
-              type="number"
+              type="text"
               name="pinCode"
               value={formDetails.pinCode}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              onChange={(e) => handleFormChange(e)}
+              onChange={handleFormChange}
               required
             />
           </div>
           {/* Medical History */}
-          {role === "patient" && (
+          {activeTab === "patient" && (
             <div>
               <label className="block font-medium text-gray-700">
                 Medical History:
@@ -304,22 +335,31 @@ const Register = () => {
               <textarea
                 name="medicalHistory"
                 value={formDetails.medicalHistory}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                onChange={(e) => handleFormChange(e)}
-                required={role === "patient"} // Required only if patient role is selected
+                onChange={handleFormChange}
+                className="w-full border border-gray-300 rounded-lg p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
               />
             </div>
           )}
-          {/* Submit Button */}
-          <div className="text-center">
+          <div className="flex justify-between mt-4">
+            <button
+              type="button"
+              className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg"
+              onClick={() => navigate("/login")}
+            >
+              Already have an account?
+            </button>
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
             >
               Register
             </button>
           </div>
         </form>
+        {errorMessage && (
+          <p className="text-red-500 text-center mt-4">{errorMessage}</p>
+        )}
       </div>
     </div>
   );

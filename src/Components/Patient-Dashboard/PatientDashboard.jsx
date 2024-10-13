@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
 import { deleteUserApi, registerApi, handleRoleChangeApi } from "../APIs/apis"; // Import your API functions
 import { FaTimes } from "react-icons/fa"; // React icon for close button
-import { jwtDecode } from "jwt-decode";
+import { userRoleContext } from "../Context/Context";
 const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
 Modal.setAppElement("#root");
 
@@ -10,6 +10,7 @@ const PatientDashboard = () => {
   const [patientData, setPatientData] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null); // For editing
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const { userRole } = useContext(userRoleContext); //used a user role context
   const [isEditing, setIsEditing] = useState(false); // Toggle between Add/Edit mode
   const [formData, setFormData] = useState({
     fullName: "",
@@ -26,24 +27,9 @@ const PatientDashboard = () => {
     password: "", // Add password field
     confirmPassword: "", // Add confirm password field
   });
-  const doctorRoles = [
-    "doctor",
-    "Optometrist",
-    "Ophthalmologist",
-    "Surgeon",
-    "Consultant",
-  ];
+  const doctorRoles = ["cataracts", "glaucoma", "macular degeneration"];
   const token = localStorage.getItem("token");
 
-  const getUserRole = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      return decodedToken.role;
-    }
-    return null;
-  };
-  const userRole = getUserRole();
   // Fetch patient data once on mount
   useEffect(() => {
     fetchData();

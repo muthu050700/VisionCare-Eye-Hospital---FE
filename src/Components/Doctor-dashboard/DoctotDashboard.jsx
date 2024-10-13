@@ -26,13 +26,7 @@ const DoctorDashboard = () => {
   });
 
   const token = localStorage.getItem("token");
-  const doctorRoles = [
-    "doctor",
-    "Optometrist",
-    "Ophthalmologist",
-    "Surgeon",
-    "Consultant",
-  ];
+  const doctorRoles = ["cataracts", "glaucoma", "macular degeneration"];
 
   // Fetch doctor data once on mount
   useEffect(() => {

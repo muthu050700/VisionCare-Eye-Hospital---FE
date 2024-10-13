@@ -13,6 +13,11 @@ import Appointments from "./Components/Doctor-appointments/Appointments";
 import DoctotDashboard from "./Components/Doctor-dashboard/DoctotDashboard";
 import PatientDashboard from "./Components/Patient-Dashboard/PatientDashboard";
 import PatientAppointment from "./Components/Patient-appointment/PatientAppointment";
+import PatientRecordsForm from "./Components/PatientRecordForm/CreatePatientRecordForm";
+import EditPatientRecordForm from "./Components/PatientRecordForm/EditPatientRecordForm";
+import PatientRecords from "./Components/PatientRecords/PatientRecords";
+import AssignAppointment from "./Components/AssignAppointments/AssignAppointments";
+
 function App() {
   const token = localStorage.getItem("token");
 
@@ -35,12 +40,10 @@ function App() {
               <ProtectedRoute
                 allowedRoles={[
                   "patient",
-                  "doctor",
+                  "cataracts",
+                  "glaucoma",
+                  "macular degeneration",
                   "admin",
-                  "Ophthalmologist",
-                  "Surgeon",
-                  "Optometrist",
-                  "Consultant",
                 ]}
               />
             }
@@ -48,9 +51,6 @@ function App() {
             <Route path="/register" element={<Navigate to="/" />} />
             <Route path="/login" element={<Navigate to="/" />} />
             <Route index element={<HomePage />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<About />} />
-            <Route path="/guidelines" element={<About />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
 
@@ -67,28 +67,48 @@ function App() {
           <Route
             element={
               <ProtectedRoute
-                allowedRoles={[
-                  "doctor",
-                  "Ophthalmologist",
-                  "Surgeon",
-                  "Optometrist",
-                  "Consultant",
-                ]}
+                allowedRoles={["cataracts", "glaucoma", "macular degeneration"]}
               />
             }
           >
             <Route path="/appointments" element={<Appointments />} />
+            <Route
+              path="/patient-record-form"
+              element={<PatientRecordsForm />}
+            />
+            <Route
+              path="/patient-editRecord-form"
+              element={<EditPatientRecordForm />}
+            />
           </Route>
           <Route
-            element={<ProtectedRoute allowedRoles={["admin", "doctor"]} />}
+            element={
+              <ProtectedRoute
+                allowedRoles={[
+                  "admin",
+                  "cataracts",
+                  "glaucoma",
+                  "macular degeneration",
+                ]}
+              />
+            }
           >
+            {" "}
+            <Route path="/patient-records" element={<PatientRecords />} />
             <Route path="/patient-dashboard" element={<PatientDashboard />} />
           </Route>
           {/* admin route */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route path="/doctor-dashboard" element={<DoctotDashboard />} />
+            <Route
+              path="/assign-doctors-appointment"
+              element={<AssignAppointment />}
+            />
           </Route>
           <Route path="/verify-account" element={<VerifyAccount />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<About />} />
+          <Route path="/guidelines" element={<About />} />
         </Route>
       </Routes>
     </BrowserRouter>

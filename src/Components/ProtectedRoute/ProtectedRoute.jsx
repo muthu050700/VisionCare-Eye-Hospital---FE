@@ -1,17 +1,9 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-
-const getUserRole = () => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    const decodedToken = jwtDecode(token);
-    return decodedToken.role;
-  }
-  return null;
-};
+import { useContext } from "react";
+import { userRoleContext } from "../Context/Context";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
-  const userRole = getUserRole();
+  const { userRole } = useContext(userRoleContext);
   return !allowedRoles.includes(userRole) ? (
     <Navigate to="/login" />
   ) : (

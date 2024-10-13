@@ -1,34 +1,25 @@
 import { useContext, useState } from "react";
 import { createAppointment } from "../APIs/apis";
 import { doctorContext } from "../Context/Context";
-import { jwtDecode } from "jwt-decode";
-
+import { userRoleContext } from "../Context/Context";
+const initialFormData = {
+  fullName: "",
+  dateOfBirth: "",
+  phoneNumber: "",
+  email: "",
+  address: "",
+  doctorId: "Not assigned yet",
+  appointmentDate: "",
+  appointmentTime: "", // Add appointmentTime to the state
+  appointmentType: "In-person", // Default to In-person consultation
+  status: "Pending", // Default status when booking an appointment
+};
 const BookAppointment = () => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    dateOfBirth: "",
-    phoneNumber: "",
-    email: "",
-    address: "",
-    doctorId: "",
-    appointmentDate: "",
-    appointmentTime: "", // Add appointmentTime to the state
-    appointmentType: "In-person", // Default to In-person consultation
-    status: "Pending", // Default status when booking an appointment
-  });
-
+  const [formData, setFormData] = useState(initialFormData);
+  const doctorRoles = ["cataracts", "glaucoma", "macular degeneration"];
   const { doctorData } = useContext(doctorContext);
-  // Get patient ID from the JWT token
-  const getPatientId = () => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      return decodedToken.id;
-    }
-    return null;
-  };
-
-  const patientId = getPatientId();
+  const { userId } = useContext(userRoleContext);
+  const patientId = userId;
   // Function to validate that the patient is at least 18 years old
   const isValidAge = (dateOfBirth) => {
     const today = new Date();
@@ -77,7 +68,8 @@ const BookAppointment = () => {
 
     try {
       const res = await createAppointment({ formData, patientId }); // Make the API call
-      alert("Appointment successfully booked.");
+      alert(res.msg);
+      setFormData(initialFormData);
     } catch (e) {
       alert("Something went wrong. Please try again.", e);
     }
@@ -159,7 +151,7 @@ const BookAppointment = () => {
         </div>
 
         {/* Select Doctor */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block text-sm font-medium mb-2">
             Select Doctor
           </label>
@@ -173,12 +165,33 @@ const BookAppointment = () => {
             <option value="">-- Select Doctor --</option>
             {doctorData.map(
               (val) =>
-                val.role === "doctor" && (
+                doctorRoles.includes(val.role) && (
                   <option key={val.id} value={val.id}>
-                    {val.fullName}
+                    {val.fullName}-{val.role}
                   </option>
                 )
             )}
+          </select>
+        </div> */}
+        {/* Select Doctor Role */}
+        {/* Select Doctor Role */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">
+            Select Doctor Role
+          </label>
+          <select
+            name="doctorRole" // Use doctorRole here
+            value={formData.doctorRole} // Bind to doctorRole in formData
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded"
+            required
+          >
+            <option value="">-- Select Doctor Role --</option>
+            {doctorRoles.map((role) => (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            ))}
           </select>
         </div>
 
