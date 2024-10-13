@@ -294,7 +294,7 @@ const Register = () => {
             <label className="block font-medium text-gray-700">Address:</label>
             <input
               type="text"
-              name="city"
+              name="address"
               value={formDetails.address}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
               onChange={handleFormChange}
