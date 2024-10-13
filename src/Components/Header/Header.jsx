@@ -119,18 +119,18 @@ const Header = () => {
 
       <div className="bg-gradient-to-r from-blue-50 to-gray-100 shadow-lg">
         <div className="container mx-auto flex justify-between items-center py-3 px-4 lg:px-0">
-          <div className="flex items-center pl-3">
+          <div className="flex items-center md:pl-3">
             <img
-              className="w-20 h-20 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300"
+              className="md:w-20 md:h-20 w-16 h-16 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300"
               src="https://t4.ftcdn.net/jpg/00/81/87/63/360_F_81876393_L1H1WOumylTFPT4IzEDqowqUUZWhvi37.jpg"
               alt="Hospital Logo"
             />
-            <h1 className="font-extrabold text-2xl text-gray-700 px-4 tracking-wide leading-tight">
+            <h1 className="font-extrabold text-lg md:text-xl lg:text-2xl text-gray-700 px-4 tracking-wide leading-tight ">
               Kiruthika Eye Care<br></br> Hospital
             </h1>
           </div>
 
-          <ul className="flex gap-10 items-center text-lg font-semibold text-gray-700">
+          <ul className=" gap-10 items-center text-lg font-semibold text-gray-700 lg:flex hidden">
             <Link to="/">
               <li
                 className={`cursor-pointer hover:text-blue-700 transition-colors duration-300 relative ${
@@ -159,7 +159,7 @@ const Header = () => {
 
             <Link to="/contact">
               <li
-                className={`cursor-pointer hover:text-blue-700 transition-colors duration-300 relative ${
+                className={`cursor-pointer hover:text-blue-700 transition-colors duration-300 relative   ${
                   pathname === "/contact" ? "text-blue-700" : ""
                 }`}
               >
@@ -172,7 +172,7 @@ const Header = () => {
 
             <Link to="/guidelines">
               <li
-                className={`cursor-pointer hover:text-blue-700 transition-colors duration-300 relative ${
+                className={`cursor-pointer hover:text-blue-700 transition-colors duration-300 relative   ${
                   pathname === "/guidelines" ? "text-blue-700" : ""
                 }`}
               >
@@ -188,7 +188,9 @@ const Header = () => {
           <div className="relative pr-3">
             <div className=" flex gap-3 justify-center items-center">
               {" "}
-              <p className=" text-xl font-medium">{profileData.fullName}</p>
+              <p className=" text-xl font-medium hidden md:flex">
+                {profileData.fullName}
+              </p>
               <img
                 src="https://www.zenclass.in/static/media/user.8d49e377.png"
                 className="w-[60px] h-[60px]  object-cover rounded-full shadow-lg cursor-pointer hover:shadow-xl transition-all"
@@ -206,7 +208,10 @@ const Header = () => {
                   {token ? (
                     <>
                       <Link to="/profile">
-                        <p className="text-white hover:bg-gray-700 rounded-md p-2 transition duration-200">
+                        <p
+                          onClick={handleProfile}
+                          className="text-white hover:bg-gray-700 rounded-md p-2 transition duration-200"
+                        >
                           Profile
                         </p>
                       </Link>
@@ -216,6 +221,49 @@ const Header = () => {
                       >
                         Logout
                       </p>
+                      <ul>
+                        {" "}
+                        <Link to="/">
+                          <p
+                            className={`text-white hover:bg-gray-700 rounded-md p-2 transition duration-200 lg:hidden ${
+                              pathname === "/" ? "bg-gray-700" : ""
+                            }`}
+                            onClick={handleProfile}
+                          >
+                            Home
+                          </p>
+                        </Link>
+                        <Link to="/about">
+                          <p
+                            className={`text-white hover:bg-gray-700 rounded-md p-2 transition duration-200 lg:hidden ${
+                              pathname === "/about" ? "bg-gray-700" : ""
+                            }`}
+                            onClick={handleProfile}
+                          >
+                            About
+                          </p>
+                        </Link>
+                        <Link to="/contact">
+                          <p
+                            className={`text-white hover:bg-gray-700 rounded-md p-2 transition duration-200 lg:hidden ${
+                              pathname === "/contact" ? "bg-gray-700" : ""
+                            }`}
+                            onClick={handleProfile}
+                          >
+                            Contact
+                          </p>
+                        </Link>
+                        <Link to="/guidelines">
+                          <p
+                            className={`text-white hover:bg-gray-700 rounded-md p-2 transition duration-200 lg:hidden ${
+                              pathname === "/guidelines" ? "bg-gray-700" : ""
+                            }`}
+                            onClick={handleProfile}
+                          >
+                            Guidelines
+                          </p>
+                        </Link>
+                      </ul>
 
                       {doctorRoles.includes(userRole) && (
                         <Link to="/appointments">
@@ -238,6 +286,7 @@ const Header = () => {
                                   ? "bg-gray-700"
                                   : ""
                               }`}
+                              onClick={handleProfile}
                             >
                               Patient Appointment
                             </p>
@@ -247,6 +296,7 @@ const Header = () => {
                               className={`text-white hover:bg-gray-700 rounded-md p-2 transition duration-200 ${
                                 pathname === "/find_doctor" ? "bg-gray-700" : ""
                               }`}
+                              onClick={handleProfile}
                             >
                               Find a Doctor
                             </p>
@@ -263,6 +313,7 @@ const Header = () => {
                                   ? "bg-gray-700"
                                   : ""
                               }`}
+                              onClick={handleProfile}
                             >
                               Patient Records
                             </p>
@@ -274,6 +325,7 @@ const Header = () => {
                                   ? "bg-gray-700"
                                   : ""
                               }`}
+                              onClick={handleProfile}
                             >
                               Patient Dashboard
                             </p>
@@ -290,6 +342,7 @@ const Header = () => {
                                   ? "bg-gray-700"
                                   : ""
                               }`}
+                              onClick={handleProfile}
                             >
                               Patient Dashboard
                             </p>
@@ -302,6 +355,7 @@ const Header = () => {
                                   ? "bg-gray-700"
                                   : ""
                               }`}
+                              onClick={handleProfile}
                             >
                               Doctor Dashboard
                             </p>
@@ -314,6 +368,7 @@ const Header = () => {
                                   ? "bg-gray-700"
                                   : ""
                               }`}
+                              onClick={handleProfile}
                             >
                               Patient Records
                             </p>
@@ -325,6 +380,7 @@ const Header = () => {
                                   ? "bg-gray-700"
                                   : ""
                               }`}
+                              onClick={handleProfile}
                             >
                               Assign Doctors for Appointment
                             </p>
@@ -335,12 +391,18 @@ const Header = () => {
                   ) : (
                     <div>
                       <Link to="/login">
-                        <p className="text-white hover:bg-gray-700 rounded-md p-2 transition duration-200">
+                        <p
+                          onClick={handleProfile}
+                          className="text-white hover:bg-gray-700 rounded-md p-2 transition duration-200"
+                        >
                           Login
                         </p>
                       </Link>
                       <Link to="/register">
-                        <p className="text-white hover:bg-gray-700 rounded-md p-2 transition duration-200">
+                        <p
+                          onClick={handleProfile}
+                          className="text-white hover:bg-gray-700 rounded-md p-2 transition duration-200"
+                        >
                           Register
                         </p>
                       </Link>

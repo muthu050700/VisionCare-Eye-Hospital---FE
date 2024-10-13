@@ -1,20 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import { userRoleContext } from "../Context/Context";
 import { profileApi } from "../APIs/apis";
-const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
+import profileSvg from "../../assets/profile.svg";
+const BE_URL = import.meta.env.VITE_BE_URL; // vite is must
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
-  const { userRole, userId } = useContext(userRoleContext); //used a user role context
+  const { userRole, userId } = useContext(userRoleContext); // used a user role context
   const doctorRoles = ["cataracts", "glaucoma", "macular degeneration"];
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`${BE_URL}/api/users`); //user fetch URL
+        const response = await fetch(`${BE_URL}/api/users`); // user fetch URL
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -57,12 +58,18 @@ const Profile = () => {
     return <div className="text-red-500 text-center">{error.message}</div>;
 
   return (
-    <div className="max-w-lg mx-auto mt-10 bg-white rounded-lg shadow-lg overflow-hidden">
-      <div className="bg-blue-500 text-white py-4 text-center">
-        <h2 className="text-2xl font-semibold">User Profile</h2>
+    <div className="max-w-4xl mx-auto mt-10 bg-white rounded-lg shadow-lg overflow-hidden flex">
+      {/* SVG on the left side */}
+      <div className="hidden lg:block">
+        <img src={profileSvg} alt="Login" className="h-full" />
       </div>
-      <div className="p-6">
-        <div className="space-y-6">
+
+      {/* Profile Form on the right side */}
+      <div className="w-full p-6 my-10">
+        <div className="bg-blue-500 text-white py-4 text-center">
+          <h2 className="text-2xl font-semibold">User Profile</h2>
+        </div>
+        <div className="space-y-6 mt-6">
           {/* Name */}
           <div className="flex items-center justify-between">
             <span className="font-medium text-gray-600">Name</span>

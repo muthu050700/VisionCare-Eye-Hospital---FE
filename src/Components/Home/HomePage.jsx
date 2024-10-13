@@ -2,42 +2,52 @@ import { bg_Image } from "../../Utils/HeaderConstant";
 import { findHospital } from "../../Utils/HomePageConstant";
 import InfoCards from "./InfoCards";
 import Service from "./Service";
+import WhyChooseUs from "./WhyChooseUs";
+
 const HomePage = () => {
   return (
     <div>
-      {/* home backgroundImage */}
+      {/* Hero Section with Background Image */}
       <div
-        className="bg-cover md:bg-top bg-center w-full h-screen"
+        className="relative bg-cover bg-center w-full h-screen"
         style={{ backgroundImage: `url(${bg_Image})` }}
       >
-        <div className="absolute bg-black opacity-40 w-full h-screen"></div>
+        {/* Overlay for dark effect */}
+        <div className="absolute inset-0 bg-black opacity-50"></div>
 
-        <div className="flex flex-col justify-center h-full gap-5 pl-10">
-          {/* Main page content */}{" "}
-          <div>
-            <h1 className=" font-normal text-[55px]">
-              Delivering happiness <br /> with utmost care.
-            </h1>
-            <p className=" font-normal text-[35px]">
-              See the world better with the experts <br /> in eye care.
-            </p>
-          </div>
-          {/*  buttons to find the doctor and hospital */}
-          <div className="flex gap-3">
+        {/* Main Content */}
+        <div className="relative flex flex-col justify-center items-start h-full px-6 md:px-12 lg:px-20">
+          {/* Heading */}
+          <h1 className="text-white font-extrabold text-4xl md:text-5xl lg:text-6xl leading-tight mb-4">
+            Delivering Happiness <br /> with Utmost Care.
+          </h1>
+          {/* Subheading */}
+          <p className="text-gray-200 text-xl md:text-2xl lg:text-3xl mb-8">
+            See the world better with the experts <br /> in eye care.
+          </p>
+
+          {/* Find Doctor/Hospital Buttons */}
+          <div className="flex flex-wrap gap-4">
             {findHospital.map((f) => (
-              <div
+              <button
                 key={f.id}
-                className="flex gap-1 bg-gray-500 w-fit px-3 py-4 rounded-full"
+                className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-full shadow-lg transition duration-300 ease-in-out"
               >
-                <p className="px-2">{f.icon}</p>
-                <p className="px-3 border-l-2 text-lg">{f.name}</p>
-              </div>
+                <span>{f.icon}</span>
+                <span>{f.name}</span>
+              </button>
             ))}
           </div>
         </div>
       </div>
-      {/* Info cards component */}
+
+      {/* Info Cards Component */}
       <InfoCards />
+
+      {/* Why Choose Us Section */}
+      <WhyChooseUs />
+
+      {/* Service Section */}
       <Service />
     </div>
   );

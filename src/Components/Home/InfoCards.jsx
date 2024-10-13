@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const InfoCards = () => {
   return (
-    <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6 py-8 px-4">
+    <div className="flex flex-col md:flex-row justify-evenly space-y-4 md:space-y-0 md:space-x-6 py-14 px-4">
       {/* Our Doctors Card */}
       <div className="bg-white rounded-lg p-6 shadow-lg w-full md:w-80 transform hover:-translate-y-2 transition-transform duration-300 ease-in-out">
         <h2 className="text-2xl font-bold mb-2 text-gray-900">Our Doctors</h2>
