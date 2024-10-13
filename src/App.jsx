@@ -17,6 +17,7 @@ import PatientRecordsForm from "./Components/PatientRecordForm/CreatePatientReco
 import EditPatientRecordForm from "./Components/PatientRecordForm/EditPatientRecordForm";
 import PatientRecords from "./Components/PatientRecords/PatientRecords";
 import AssignAppointment from "./Components/AssignAppointments/AssignAppointments";
+import Contact from "./Components/Contact/Contact";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -107,7 +108,7 @@ function App() {
           </Route>
           <Route path="/verify-account" element={<VerifyAccount />} />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/guidelines" element={<About />} />
         </Route>
       </Routes>

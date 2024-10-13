@@ -1,5 +1,6 @@
 import { bg_Image } from "../../Utils/HeaderConstant";
 import { findHospital } from "../../Utils/HomePageConstant";
+import DoctorSpecialties from "./DoctorSpecialties";
 import InfoCards from "./InfoCards";
 import Service from "./Service";
 import WhyChooseUs from "./WhyChooseUs";
@@ -43,7 +44,7 @@ const HomePage = () => {
 
       {/* Info Cards Component */}
       <InfoCards />
-
+      <DoctorSpecialties />
       {/* Why Choose Us Section */}
       <WhyChooseUs />
 
