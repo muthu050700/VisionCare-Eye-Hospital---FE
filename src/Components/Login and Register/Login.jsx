@@ -17,7 +17,6 @@ const Login = () => {
       [e.target.name]: e.target.value,
     });
   };
-
   // Handle login form submit
   const handleLoginFormSubmit = async (e) => {
     e.preventDefault();
@@ -25,6 +24,8 @@ const Login = () => {
       const { email, password } = loginFormDetails;
       const res = await userLogin({ email, password });
       alert(res.msg);
+      localStorage.setItem("token", res.tokenLogin);
+      location.reload();
       navigate("/");
     } catch (e) {
       console.log("error", e);

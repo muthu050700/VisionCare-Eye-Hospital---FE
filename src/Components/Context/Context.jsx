@@ -9,11 +9,21 @@ const Context = ({ children }) => {
   const [doctorData, setDoctorData] = useState(null);
   const [doctorId, setDoctorId] = useState("");
   const doctorRoles = ["cataracts", "glaucoma", "macular degeneration"];
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
+  // Effect to update token when it's set in localStorage
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    } else {
+      setToken(null);
+    }
+  });
+  console.log(token);
   //get a userRole and userId from token
 
   const getUserDataFromToken = () => {
-    const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
       return {

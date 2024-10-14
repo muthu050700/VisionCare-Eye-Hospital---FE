@@ -37,8 +37,6 @@ export const userLogin = async (patientCredentials) => {
     throw new Error("Invalid Credentials or somthing went wrong");
   } else {
     const data = await res.json();
-    console.log(data);
-    localStorage.setItem("token", data.tokenLogin);
     return data;
   }
 };

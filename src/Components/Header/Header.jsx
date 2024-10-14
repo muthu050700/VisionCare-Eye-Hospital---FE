@@ -15,6 +15,7 @@ const Header = () => {
 
   const logout = async () => {
     localStorage.removeItem("token");
+    location.reload();
     navigate("/login");
   };
 
