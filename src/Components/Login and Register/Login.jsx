@@ -75,6 +75,13 @@ const Login = () => {
             >
               Login
             </button>
+            <button
+              type="button"
+              className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg"
+              onClick={() => navigate("/register")}
+            >
+              Don't have an account?
+            </button>
           </form>
         </div>
       </div>

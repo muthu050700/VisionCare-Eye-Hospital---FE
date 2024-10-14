@@ -26,7 +26,6 @@ const Profile = () => {
           d.id === userId && setUser(d);
         });
 
-        // Allow editing if the user is a doctor or admin
         if (doctorRoles.includes(userRole) || userRole === "admin") {
           setIsEditable(true);
         }
@@ -54,7 +53,8 @@ const Profile = () => {
   if (loading) return <div className="text-center">Loading...</div>;
   if (error)
     return <div className="text-red-500 text-center">{error.message}</div>;
-
+  if (user === null)
+    return <h1>Something went wrong, Please logout and try agin.</h1>;
   return (
     <div className="max-w-4xl mx-auto mt-10 bg-white rounded-lg shadow-lg overflow-hidden flex">
       {/* SVG on the left side */}
@@ -65,7 +65,7 @@ const Profile = () => {
       {/* Profile Form on the right side */}
       <div className="w-full p-6 my-10">
         <div className="bg-blue-500 text-white py-4 text-center">
-          <h2 className="text-2xl font-semibold">User Profile</h2>
+          <h2 className="text-2xl font-semibold">Profile</h2>
         </div>
         <div className="space-y-6 mt-6">
           {/* Name */}

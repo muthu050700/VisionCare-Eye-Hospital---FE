@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import contactSvg from "../../assets/register.svg"; // Replace with your SVG file
+import contactSvg from "../../assets/contact.svg"; // Replace with your SVG file
+import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa"; // Import icons from react-icons
 
 const initialFormData = {
   name: "",
@@ -24,7 +25,6 @@ const Contact = () => {
     // You can add form validation here before submitting
 
     try {
-      // Implement your API call to send the message
       console.log("Form Data Submitted:", formData);
       alert("Your message has been sent!");
       setFormData(initialFormData); // Reset form
@@ -40,9 +40,62 @@ const Contact = () => {
         <img src={contactSvg} alt="Contact Us" className="h-full" />
       </div>
 
-      {/* Form Section */}
+      {/* Form and Content Section */}
       <div className="w-full lg:w-1/2 p-6 bg-white shadow-md rounded-lg">
-        <h2 className="text-2xl font-bold mb-6">Contact Us</h2>
+        {/* Heading */}
+        <h2 className="text-3xl font-bold mb-4 text-center">Get in Touch</h2>
+
+        {/* Contact Cards */}
+        <div className="grid gap-6 mb-8">
+          {/* Phone Card */}
+          <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
+            <FaPhone className="text-blue-600 text-3xl mr-4" />
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold">Phone</h3>
+              <p className="text-gray-700">+1 234 567 890</p>
+            </div>
+            <a
+              href="tel:+1234567890"
+              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+            >
+              Call Us
+            </a>
+          </div>
+
+          {/* Email Card */}
+          <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
+            <FaEnvelope className="text-blue-600 text-3xl mr-4" />
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold">Email</h3>
+              <p className="text-gray-700">contact@example.com</p>
+            </div>
+            <a
+              href="mailto:contact@example.com"
+              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+            >
+              Mail Us
+            </a>
+          </div>
+
+          {/* Location Card */}
+          <div className="bg-gray-100 p-4 rounded-lg shadow-md flex items-center">
+            <FaMapMarkerAlt className="text-blue-600 text-3xl mr-4" />
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold">Location</h3>
+              <p className="text-gray-700">123 Main St, City, Country</p>
+            </div>
+            <a
+              href="https://maps.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+            >
+              Visit Us
+            </a>
+          </div>
+        </div>
+
+        {/* Form Section */}
         <form onSubmit={handleSubmit}>
           {/* Name */}
           <div className="mb-4">
