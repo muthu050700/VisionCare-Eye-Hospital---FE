@@ -1,6 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect, useContext } from "react";
-import { userRoleContext } from "../Context/Context";
+import { useState, useEffect } from "react";
 const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
 const Header = () => {
   const { pathname } = useLocation();
@@ -8,20 +7,15 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [profileData, setProfileData] = useState("");
   const navigate = useNavigate();
-  const { userRole, userId } = useContext(userRoleContext); //used a user role context
   const doctorRoles = ["cataracts", "glaucoma", "macular degeneration"];
   const token = localStorage.getItem("token");
+  const userRole = localStorage.getItem("userRole");
+  const userId = localStorage.getItem("userId");
   const handleProfile = () => setShow(!show);
-
-  const logout = async () => {
-    localStorage.removeItem("token");
-    location.reload();
-    navigate("/login");
-  };
 
   useEffect(() => {
     userFetch();
-  }, []);
+  }, [userId]);
   const userFetch = async () => {
     const response = await fetch(`${BE_URL}/api/users`); //user fetch URL
 
@@ -30,7 +24,12 @@ const Header = () => {
       val.id === userId && setProfileData(val);
     });
   };
-
+  const logout = async () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userId");
+    navigate("/login");
+  };
   // Close the dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -58,7 +57,7 @@ const Header = () => {
   const closeModal = () => {
     setIsOpen(false);
   };
-
+  console.log("header");
   return (
     <div>
       {userRole === "patient" && (
@@ -190,7 +189,7 @@ const Header = () => {
             <div className=" flex gap-3 justify-center items-center">
               {" "}
               <p className=" text-xl font-medium hidden md:flex">
-                {profileData.fullName}
+                {userId && profileData.fullName}
               </p>
               <img
                 src="https://www.zenclass.in/static/media/user.8d49e377.png"

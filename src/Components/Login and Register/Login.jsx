@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { userLogin } from "../APIs/apis";
 import { Navigate, useNavigate } from "react-router-dom";
 import loginSvg from "../../assets/login.svg"; // Adjust the path according to your file structure
-
+import { jwtDecode } from "jwt-decode";
 const Login = () => {
   const navigate = useNavigate();
   const [loginFormDetails, setLoginFormDetails] = useState({
@@ -23,9 +23,29 @@ const Login = () => {
     try {
       const { email, password } = loginFormDetails;
       const res = await userLogin({ email, password });
-      alert(res.msg);
+
       localStorage.setItem("token", res.tokenLogin);
-      location.reload();
+      alert(res.msg);
+
+      const getUserDataFromToken = () => {
+        const token = localStorage.getItem("token");
+        console.log(token);
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          return {
+            id: decodedToken.id,
+            role: decodedToken.role,
+          };
+        }
+        return null;
+      };
+
+      const userData = getUserDataFromToken();
+      const userId = userData?.id;
+      const userRole = userData?.role;
+
+      localStorage.setItem("userRole", userRole);
+      localStorage.setItem("userId", userId);
       navigate("/");
     } catch (e) {
       console.log("error", e);

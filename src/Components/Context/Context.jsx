@@ -9,35 +9,13 @@ const Context = ({ children }) => {
   const [doctorData, setDoctorData] = useState(null);
   const [doctorId, setDoctorId] = useState("");
   const doctorRoles = ["cataracts", "glaucoma", "macular degeneration"];
-  const [token, setToken] = useState(localStorage.getItem("token"));
 
-  // Effect to update token when it's set in localStorage
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-    } else {
-      setToken(null);
-    }
-  });
-  console.log(token);
   //get a userRole and userId from token
 
-  const getUserDataFromToken = () => {
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      return {
-        id: decodedToken.id,
-        role: decodedToken.role,
-      };
-    }
-    return null;
+  const updateToken = (newToken) => {
+    setToken(newToken);
+    localStorage.setItem("token", newToken); // Save to localStorage
   };
-
-  const userData = getUserDataFromToken();
-  const userId = userData?.id;
-  const userRole = userData?.role;
-
   //fetching the data
   useEffect(() => {
     fetchData();
@@ -57,10 +35,10 @@ const Context = ({ children }) => {
 
   return (
     <>
-      <doctorContext.Provider value={{ doctorData, doctorId, setDoctorId }}>
-        <userRoleContext.Provider value={{ userRole, userId }}>
-          {children}
-        </userRoleContext.Provider>
+      <doctorContext.Provider
+        value={{ doctorData, doctorId, setDoctorId, updateToken }}
+      >
+        {children}
       </doctorContext.Provider>
     </>
   );

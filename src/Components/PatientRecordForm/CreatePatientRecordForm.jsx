@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import { userRoleContext } from "../Context/Context";
 
 const BE_URL = import.meta.env.VITE_BE_URL; // vite is must
 const token = localStorage.getItem("token");
@@ -19,7 +18,8 @@ const initialFormDetails = {
 };
 const CreatePatientRecordForm = () => {
   const [patientData, setPatientData] = useState(initialFormDetails);
-  const { userId } = useContext(userRoleContext);
+
+  const userId = localStorage.getItem("userId");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");

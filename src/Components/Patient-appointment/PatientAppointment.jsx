@@ -1,6 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
-import { userRoleContext } from "../Context/Context";
 const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
 const token = localStorage.getItem("token");
 
@@ -10,7 +8,7 @@ const PatientAppointments = () => {
   const [rescheduleDate, setRescheduleDate] = useState({});
   const [rescheduleTime, setRescheduleTime] = useState({});
   const [cancelledAppointments, setCancelledAppointments] = useState([]);
-  const { userId } = useContext(userRoleContext);
+  const userId = localStorage.getItem("userId");
 
   const patientId = userId;
 

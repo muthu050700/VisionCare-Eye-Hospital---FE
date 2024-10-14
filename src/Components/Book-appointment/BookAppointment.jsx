@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import { createAppointment } from "../APIs/apis";
 import { doctorContext } from "../Context/Context";
-import { userRoleContext } from "../Context/Context";
 import appointmentSvg from "../../assets/appointment.svg";
 
 const initialFormData = {
@@ -21,7 +20,8 @@ const BookAppointment = () => {
   const [formData, setFormData] = useState(initialFormData);
   const doctorRoles = ["cataracts", "glaucoma", "macular degeneration"];
   const { doctorData } = useContext(doctorContext);
-  const { userId } = useContext(userRoleContext);
+
+  const userId = localStorage.getItem("userId");
   const patientId = userId;
 
   const isValidAge = (dateOfBirth) => {
@@ -164,7 +164,7 @@ const BookAppointment = () => {
           {/* Select Doctor Role */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">
-              Select Doctor Role
+              Choose Specialists
             </label>
             <select
               name="doctorRole"
@@ -173,7 +173,7 @@ const BookAppointment = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded"
               required
             >
-              <option value="">-- Select Doctor Role --</option>
+              <option value="">-- Select Doctor --</option>
               {doctorRoles.map((role) => (
                 <option key={role} value={role}>
                   {role}

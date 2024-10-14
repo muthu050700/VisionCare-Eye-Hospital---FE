@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from "react";
-import { userRoleContext } from "../Context/Context";
 
 const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
 const token = localStorage.getItem("token");
@@ -24,7 +23,8 @@ const EditablePatientRecordsForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
-  const { userId } = useContext(userRoleContext);
+
+  const userId = localStorage.getItem("userId");
 
   const doctorId = userId;
   // Fetch the list of patients when the component mounts

@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { userRoleContext } from "../Context/Context";
 import { profileApi } from "../APIs/apis";
 import profileSvg from "../../assets/profile.svg";
 const BE_URL = import.meta.env.VITE_BE_URL; // vite is must
@@ -9,7 +8,8 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
-  const { userRole, userId } = useContext(userRoleContext); // used a user role context
+  const userRole = localStorage.getItem("userRole");
+  const userId = localStorage.getItem("userId");
   const doctorRoles = ["cataracts", "glaucoma", "macular degeneration"];
   console.log(userId);
   useEffect(() => {

@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { userRoleContext } from "../Context/Context";
 const BE_URL = import.meta.env.VITE_BE_URL; // vite is must
 const token = localStorage.getItem("token");
 
@@ -10,7 +9,8 @@ const PatientRecords = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { pathname } = useLocation();
-  const { userRole, userId } = useContext(userRoleContext);
+  const userRole = localStorage.getItem("userRole");
+  const userId = localStorage.getItem("userId");
   const [selectedDoctors, setSelectedDoctors] = useState({}); // Track selected doctor for each patient
   const [noAccessMessageShown, setNoAccessMessageShown] = useState(false); // Track if "No Access" message has been shown
   const doctorRoles = ["cataracts", "glaucoma", "macular degeneration"];

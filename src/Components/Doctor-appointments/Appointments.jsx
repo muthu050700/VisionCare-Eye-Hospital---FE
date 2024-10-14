@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { userRoleContext } from "../Context/Context";
 const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
 const token = localStorage.getItem("token");
 
@@ -11,7 +10,7 @@ const DoctorAppointments = () => {
   const [rescheduleTime, setRescheduleTime] = useState({});
   const [status, setStatus] = useState({});
   const { pathname } = useLocation();
-  const { userId } = useContext(userRoleContext);
+  const userId = localStorage.getItem("userId");
   const doctorId = userId;
 
   // Fetch appointments when doctorId is available
