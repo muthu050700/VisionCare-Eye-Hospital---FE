@@ -204,8 +204,8 @@ const DoctorAppointments = () => {
                       >
                         <option value="pending">Pending</option>
                         <option value="approved">Approved</option>
-                        <option value="close appointment">
-                          Close Appoinment
+                        <option value="Appointment Closed">
+                          Close Appointment
                         </option>
                       </select>
                       <button

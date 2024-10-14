@@ -91,8 +91,7 @@ export const deleteUserApi = async (id) => {
   return await res.json();
 };
 
-//
-
+// Update API for profile
 export const profileApi = async (userId, user) => {
   console.log(userId);
   try {
@@ -107,4 +106,40 @@ export const profileApi = async (userId, user) => {
   } catch (e) {
     console.log(e);
   }
+};
+
+//Appointment reschedule
+
+export const patientRescheduleAppointment = async (
+  appointmentId,
+  updatedAppointment
+) => {
+  const res = await fetch(
+    `${BE_URL}/book-appointment/patient/reschedule/${appointmentId}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json;charset=utf-8",
+      },
+      body: JSON.stringify(updatedAppointment),
+    }
+  );
+  return res;
+};
+
+//cancelling the appointment
+
+export const patientAppointmentCancel = async (appointmentId) => {
+  const res = await fetch(
+    `${BE_URL}/book-appointment/patient/cancel/${appointmentId}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    }
+  );
+  return res;
 };

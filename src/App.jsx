@@ -20,6 +20,7 @@ import AssignAppointment from "./Components/AssignAppointments/AssignAppointment
 import Contact from "./Components/Contact/Contact";
 import Guideline from "./Components/GuideLine/GuideLine";
 import { jwtDecode } from "jwt-decode";
+import FindDoctor from "./Components/FindDoctor/FindDoctor";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -60,7 +61,7 @@ function App() {
           {/* patient route */}
           <Route element={<ProtectedRoute allowedRoles={["patient"]} />}>
             <Route path="/book-appointment" element={<BookAppointment />} />
-            <Route path="/find_doctor" element={<About />} />
+            <Route path="/find_doctor" element={<FindDoctor />} />
             <Route
               path="/patient-appointment"
               element={<PatientAppointment />}

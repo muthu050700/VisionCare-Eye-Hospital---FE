@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import noRecord from "../../assets/no_data.svg";
 const BE_URL = import.meta.env.VITE_BE_URL; // vite is must
 const token = localStorage.getItem("token");
 
@@ -243,9 +244,19 @@ const PatientRecords = () => {
               patientRecords.every(
                 (record) => record.doctorId !== doctorId
               ) && (
-                <p className="text-red-500 text-center mt-6">
-                  No access to see the patient records. Please contact Admin.
-                </p>
+                <div className="max-w-2xl mx-auto mt-8">
+                  <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-md flex items-center">
+                    <div className="hidden lg:block">
+                      <img src={noRecord} alt="Login" className="h-full" />
+                    </div>
+                    <div>
+                      <p className="text-center">
+                        No access to see the patient records. Please contact
+                        Admin.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               )}
           </>
         )}

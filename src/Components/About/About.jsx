@@ -8,8 +8,8 @@ const About = () => {
         {/* Left Side - Image */}
         <div className="lg:w-1/2 w-full">
           <img
-            src="https://img.freepik.com/free-photo/analog-city-landscape-with-buildings-daylight_23-2149661433.jpg?t=st=1728854091~exp=1728857691~hmac=745dcc56ed1c58ff42f4830cdada0bcc10b3fd33697f008606829a306950e2c5&w=996"
-            alt="About Kiruthika Eye Care Hospital"
+            src="https://images.pexels.com/photos/269077/pexels-photo-269077.jpeg?cs=srgb&dl=pexels-pixabay-269077.jpg&fm=jpg"
+            alt="About NexGen Eye Care Hospital"
             className="w-full h-full object-cover"
           />
         </div>
@@ -17,7 +17,7 @@ const About = () => {
         {/* Right Side - Content */}
         <div className="lg:w-1/2 w-full p-8 lg:p-12 space-y-6">
           <h1 className="text-3xl lg:text-4xl font-bold text-blue-600">
-            Welcome To VS Kiruthika Eye Care Hospitals
+            Welcome To NexGen Eye Care Hospitals
           </h1>
           <p className="text-lg text-gray-700">
             Our patients are our top priority. We provide exceptional medical
@@ -70,11 +70,11 @@ const About = () => {
           <div className="flex justify-center bg-gradient-to-r from-blue-50 to-blue-100 p-8 rounded-lg shadow-lg">
             <div className="bg-white md:xl:w-[600px] xl:w-[700px] md:h-[600px] p-8 rounded-lg shadow-xl">
               <h1 className="font-bold text-2xl md:text-3xl xl:text-4xl pb-5 text-center text-blue-800">
-                Kiruthika Eye Care: A Vision for Excellence
+                NexGen Eye Care: A Vision for Excellence
               </h1>
               <div className="flex flex-col gap-6 text-gray-700 leading-relaxed">
                 <p>
-                  Kiruthika Eye Care Hospitals is a trusted name in eye health,
+                  NexGen Eye Care Hospitals is a trusted name in eye health,
                   built on a legacy of outstanding ophthalmic care. With
                   state-of-the-art technology and a patient-centric approach, we
                   provide world-class eye care services to people from all walks

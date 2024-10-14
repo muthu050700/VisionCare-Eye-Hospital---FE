@@ -151,43 +151,43 @@ const PatientDashboard = () => {
   };
   if (patientData.length !== 0)
     return (
-      <div className="p-5">
+      <div className="p-5 bg-gray-50 min-h-screen">
         <div className="flex justify-between items-center mb-5">
-          <h2 className="text-3xl font-bold text-gray-700">
+          <h2 className="text-3xl font-bold text-gray-800">
             Patient Dashboard
           </h2>
           {!doctorRoles.includes(userRole) && (
             <button
               onClick={handleAddRecord}
-              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 shadow-md"
             >
               Add Record
             </button>
           )}
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="py-2 px-4 border">Full Name</th>
-                <th className="py-2 px-4 border">Email</th>
-                <th className="py-2 px-4 border">Phone</th>
-                <th className="py-2 px-4 border">Address</th>
-                <th className="py-2 px-4 border">Date of Birth</th>
-                <th className="py-2 px-4 border">Gender</th>
-                <th className="py-2 px-4 border">City</th>
-                <th className="py-2 px-4 border">State</th>
-                <th className="py-2 px-4 border">Pin Code</th>
-                <th className="py-2 px-4 border">Medical History</th>
-                <th className="py-2 px-4 border">Actions</th>
+        <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+          <table className="min-w-full text-sm text-gray-700">
+            <thead className="bg-gray-100 border-b-2 border-gray-200">
+              <tr>
+                <th className="py-2 px-4 text-left">Full Name</th>
+                <th className="py-2 px-4 text-left">Email</th>
+                <th className="py-2 px-4 text-left">Phone</th>
+                <th className="py-2 px-4 text-left">Address</th>
+                <th className="py-2 px-4 text-left">Date of Birth</th>
+                <th className="py-2 px-4 text-left">Gender</th>
+                <th className="py-2 px-4 text-left">City</th>
+                <th className="py-2 px-4 text-left">State</th>
+                <th className="py-2 px-4 text-left">Pin Code</th>
+                <th className="py-2 px-4 text-left">Medical History</th>
+                <th className="py-2 px-4 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
               {patientData.map(
                 (patient) =>
                   patient.role === "patient" && (
-                    <tr key={patient.id} className="border-b">
+                    <tr key={patient.id} className="border-b hover:bg-gray-50">
                       <td className="py-2 px-4">{patient.fullName}</td>
                       <td className="py-2 px-4">{patient.email}</td>
                       <td className="py-2 px-4">{patient.phoneNumber}</td>
@@ -203,14 +203,14 @@ const PatientDashboard = () => {
                       <td className="py-2 px-4 flex space-x-2">
                         <button
                           onClick={() => handleEdit(patient)}
-                          className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                          className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 shadow-md"
                         >
                           Edit
                         </button>
                         {!doctorRoles.includes(userRole) && (
                           <button
                             onClick={() => handleDelete(patient.id)}
-                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 shadow-md"
                           >
                             Delete
                           </button>
@@ -242,60 +242,52 @@ const PatientDashboard = () => {
               {isEditing ? "Edit Patient" : "Add New Patient"}
             </h2>
             <button onClick={() => setModalIsOpen(false)}>
-              <FaTimes className="text-red-600" />
+              <FaTimes className="text-2xl text-gray-600" />
             </button>
           </div>
-          <div className="space-y-4">
+
+          <div className="grid grid-cols-1 gap-4">
+            {/* Fields */}
             <input
-              type="text"
               name="fullName"
-              placeholder="Full Name"
               value={formData.fullName}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
+              placeholder="Full Name"
+              className="border px-3 py-2 rounded"
             />
             <input
-              type="email"
               name="email"
-              placeholder="Email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
+              placeholder="Email"
+              className="border px-3 py-2 rounded"
             />
             <input
-              type="text"
               name="phoneNumber"
-              placeholder="Phone Number"
               value={formData.phoneNumber}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
+              placeholder="Phone Number"
+              className="border px-3 py-2 rounded"
             />
             <input
-              type="text"
               name="address"
-              placeholder="Address"
               value={formData.address}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
+              placeholder="Address"
+              className="border px-3 py-2 rounded"
             />
             <input
-              type="date"
               name="dateOfBirth"
               value={formData.dateOfBirth}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
+              type="date"
+              className="border px-3 py-2 rounded"
             />
             <select
               name="gender"
               value={formData.gender}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
+              className="border px-3 py-2 rounded"
             >
               <option value="">Select Gender</option>
               <option value="male">Male</option>
@@ -303,71 +295,61 @@ const PatientDashboard = () => {
               <option value="other">Other</option>
             </select>
             <input
-              type="text"
               name="city"
-              placeholder="City"
               value={formData.city}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
+              placeholder="City"
+              className="border px-3 py-2 rounded"
             />
             <input
-              type="text"
               name="state"
-              placeholder="State"
               value={formData.state}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
+              placeholder="State"
+              className="border px-3 py-2 rounded"
             />
             <input
-              type="text"
               name="pinCode"
-              placeholder="Pin Code"
               value={formData.pinCode}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
+              placeholder="Pin Code"
+              className="border px-3 py-2 rounded"
             />
             <textarea
               name="medicalHistory"
-              placeholder="Medical History"
               value={formData.medicalHistory}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
-            ></textarea>
-
-            {/* New Password Fields */}
+              placeholder="Medical History"
+              className="border px-3 py-2 rounded"
+            />
             <input
-              type="password"
               name="password"
-              placeholder="Password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
+              placeholder="Password"
+              type="password"
+              className="border px-3 py-2 rounded"
             />
             <input
-              type="password"
               name="confirmPassword"
-              placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
+              placeholder="Confirm Password"
+              type="password"
+              className="border px-3 py-2 rounded"
             />
-
-            <button
-              onClick={handleSubmit}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-            >
-              {isEditing ? "Update Patient" : "Add Patient"}
-            </button>
           </div>
+
+          <button
+            onClick={handleSubmit}
+            className="bg-blue-500 text-white px-4 py-2 mt-4 rounded-lg hover:bg-blue-600 shadow-md"
+          >
+            {isEditing ? "Update Patient" : "Add Patient"}
+          </button>
         </Modal>
       </div>
     );
+  return <p className="text-center">No patient data available</p>;
 };
 
 export default PatientDashboard;

@@ -125,9 +125,7 @@ const DoctorDashboard = () => {
         !formData.city ||
         !formData.state ||
         !formData.pinCode ||
-        !formData.medicalHistory ||
-        !formData.password ||
-        !formData.confirmPassword
+        !formData.password
       ) {
         alert("Please fill out all required fields.");
         return; // Stop the submission
@@ -316,12 +314,10 @@ const DoctorDashboard = () => {
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded-lg"
           >
-            <option value="">Select Doctor</option>
-            <option value="doctor">doctor</option>
-            <option value="Optometrist">Optometrist</option>
-            <option value="Ophthalmologist">Ophthalmologist</option>
-            <option value="Surgeon">Surgeon</option>
-            <option value="Consultant">Consultant</option>
+            <option value="">Select Specialization</option>
+            <option value="cataracts">Cataracts</option>
+            <option value="glaucoma">Glaucoma</option>
+            <option value="macular degeneration">Macular Degeneration</option>
           </select>
           {/* Password fields */}
           <input

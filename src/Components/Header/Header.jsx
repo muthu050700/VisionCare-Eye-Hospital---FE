@@ -29,6 +29,7 @@ const Header = () => {
     localStorage.removeItem("userRole");
     localStorage.removeItem("userId");
     navigate("/login");
+    location.reload();
   };
   // Close the dropdown when clicking outside
   useEffect(() => {
@@ -118,15 +119,15 @@ const Header = () => {
       )}
 
       <div className="bg-gradient-to-r from-blue-50 to-gray-100 shadow-lg">
-        <div className="container mx-auto flex justify-between items-center py-3 px-4 lg:px-0">
+        <div className=" mx-auto flex justify-between items-center py-2 px-2 lg:px-0">
           <div className="flex items-center md:pl-3">
             <img
-              className="md:w-20 md:h-20 w-16 h-16 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300"
-              src="https://t4.ftcdn.net/jpg/00/81/87/63/360_F_81876393_L1H1WOumylTFPT4IzEDqowqUUZWhvi37.jpg"
+              className="md:w-24 md:h-24 w-16 h-16 rounded-full shadow-md hover:shadow-xl transition-shadow duration-300"
+              src="https://i.pinimg.com/564x/84/bc/39/84bc396fb5b53d6296ebea718050d56b.jpg"
               alt="Hospital Logo"
             />
             <h1 className="font-extrabold text-lg md:text-xl lg:text-2xl text-gray-700 px-4 tracking-wide leading-tight ">
-              Kiruthika Eye Care<br></br> Hospital
+              NexGen Eye Care<br></br> Hospital
             </h1>
           </div>
 
@@ -188,11 +189,11 @@ const Header = () => {
           <div className="relative pr-3">
             <div className=" flex gap-3 justify-center items-center">
               {" "}
-              <p className=" text-xl font-medium hidden md:flex">
+              <p className=" text-xl font-medium hidden md:flex  text-gray-700">
                 {userId && profileData.fullName}
               </p>
               <img
-                src="https://www.zenclass.in/static/media/user.8d49e377.png"
+                src="https://i.pinimg.com/564x/38/6c/52/386c5283f14bdca0fa14e28dd18fb574.jpg"
                 className="w-[60px] h-[60px]  object-cover rounded-full shadow-lg cursor-pointer hover:shadow-xl transition-all"
                 onClick={handleProfile}
                 alt="Profile"
@@ -385,6 +386,14 @@ const Header = () => {
                               Assign Doctors for Appointment
                             </p>
                           </Link>
+                          {token && (
+                            <p
+                              onClick={logout}
+                              className="text-white hover:bg-gray-700 rounded-md p-2 transition duration-200 cursor-pointer"
+                            >
+                              Logout
+                            </p>
+                          )}
                         </>
                       )}
                     </>

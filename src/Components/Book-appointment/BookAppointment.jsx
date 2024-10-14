@@ -174,6 +174,7 @@ const BookAppointment = () => {
               required
             >
               <option value="">-- Select Doctor --</option>
+              <option value="general">General</option>
               {doctorRoles.map((role) => (
                 <option key={role} value={role}>
                   {role}

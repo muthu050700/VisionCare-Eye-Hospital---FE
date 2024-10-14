@@ -16,8 +16,8 @@ const initialFormDetails = {
   state: "",
   pinCode: "",
   email: "",
-  medicalHistory: "",
-  role: "patient", // Added role field
+  medicalHistory: "No Records",
+  role: "patient",
 };
 
 const Register = () => {
@@ -114,11 +114,7 @@ const Register = () => {
       if (res.status === 409) {
         setErrorMessage(res.msg);
       } else {
-        alert(
-          `${
-            formDetails.role.charAt(0).toUpperCase() + formDetails.role.slice(1)
-          } profile registered successfully`
-        );
+        alert(`profile registered successfully`);
         navigate("/login");
       }
     } catch (error) {
@@ -341,14 +337,13 @@ const Register = () => {
           {activeTab === "patient" && (
             <div>
               <label className="block font-medium text-gray-700">
-                Medical History:
+                Medical History: (optional)
               </label>
               <textarea
                 name="medicalHistory"
                 value={formDetails.medicalHistory}
                 onChange={handleFormChange}
                 className="w-full border border-gray-300 rounded-lg p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
               />
             </div>
           )}
