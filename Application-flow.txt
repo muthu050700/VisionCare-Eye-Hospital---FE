@@ -1,16 +1,17 @@
-To make it simple i have registered some users and you can find the login details here
+I have already registered three users, and you can use these credentials to log in, or you 
+can create new users.
 
 1. Patient
-   Email: 
-   Password: 
+   Email: suresh123@gmail.com
+   Password: Suresh@123
 
 2. Admin
-   Email:
-   Password:
+   Email: poonam123@gmail.com
+   Password: Poonam@123
 
 3. Doctor
-   Email:
-   Password:      
+   Email: kiruthika19012000@gmail.com
+   Password: Kumaran050
 
 
 Application Flow:
@@ -88,7 +89,7 @@ Permissions:
   - Can update patient information, such as appointment-related details.
 
 - Update Appointment Status:
-  - Can mark appointments as Approved and Close the appointment once it is completed.
+  - Can mark appointments as Approved and Close the appointment once it is completed. Once closed the appointment Create record will be enabled
 
 - Access Patient Records:
   - Can view, create, and update patient medical records (e.g., medical history, treatment notes).
