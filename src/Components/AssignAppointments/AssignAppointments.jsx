@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 const BE_URL = import.meta.env.VITE_BE_URL; //vite is must
-
 const AssignAppointment = () => {
   const [appointments, setAppointments] = useState([]);
   const [doctors, setDoctors] = useState([]); // State for storing doctors
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedDoctor, setSelectedDoctor] = useState({}); // State to hold selected doctor for each appointment
-
   // Fetch appointments and doctors from the backend
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -22,7 +20,6 @@ const AssignAppointment = () => {
         setError("Error fetching appointments");
       }
     };
-
     const fetchDoctors = async () => {
       try {
         const response = await fetch(`${BE_URL}/api/users`); // Update with your actual API endpoint
@@ -36,30 +33,24 @@ const AssignAppointment = () => {
         setError("Error fetching doctors");
       }
     };
-
     const fetchData = async () => {
       await Promise.all([fetchAppointments(), fetchDoctors()]); // Fetch both appointments and doctors concurrently
       setLoading(false);
     };
-
     fetchData();
   }, []);
-
   // Function to handle assigning a doctor
   const handleAssignDoctor = async (appointmentId) => {
     const doctorId = selectedDoctor[appointmentId];
-
     // Check if a doctor is selected
     if (!doctorId) {
       alert("Please select a doctor before assigning.");
       return;
     }
-
     // Implement the API call to update the appointment with the assigned doctor
     console.log(
       `Assigned Doctor: ${doctorId} to Appointment ID: ${appointmentId}`
     );
-
     // Example API call to update appointment
     try {
       const response = await fetch(
@@ -72,7 +63,6 @@ const AssignAppointment = () => {
           body: JSON.stringify({ doctorId }), // Pass the selected doctor ID
         }
       );
-
       // Optionally, update the local state or re-fetch appointments here
       const updatedAppointment = await response.json();
       alert(updatedAppointment.msg);
@@ -85,13 +75,15 @@ const AssignAppointment = () => {
       console.error("Error updating appointment:", error);
     }
   };
-
   // Loading and error handling
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   console.log(appointments[0].email);
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto h-screen">
+      <h2 className="text-3xl font-bold text-center mb-6 text-gray-800 my-10">
+        Assign Doctor For Appointment
+      </h2>
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
@@ -142,60 +134,57 @@ const AssignAppointment = () => {
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {appointment.doctorRole}
               </td>
-              {doctors
-                .filter((doctor) => doctor.role === appointment.doctorRole)
-                .map((doctor) => (
-                  <>
-                    {" "}
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      <select
-                        value={selectedDoctor[appointment.id] || ""}
-                        onChange={(e) =>
-                          setSelectedDoctor({
-                            ...selectedDoctor,
-                            [appointment.id]: e.target.value,
-                          })
-                        }
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
-                      >
-                        <option value="">Select Doctor</option>
-                        {doctors
-                          .filter(
-                            (doctor) => doctor.role === appointment.doctorRole
-                          )
-                          .map((doctor) => (
-                            <option key={doctor.id} value={doctor.id}>
-                              {doctor.fullName} - {doctor.role}
-                            </option>
-                          ))}
-                      </select>
-                    </td>
-                  </>
-                ))}
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <select
+                  value={selectedDoctor[appointment.id] || ""}
+                  onChange={(e) =>
+                    setSelectedDoctor({
+                      ...selectedDoctor,
+                      [appointment.id]: e.target.value,
+                    })
+                  }
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
+                >
+                  <option value="">Select Doctor</option>
+                  {doctors
+                    .filter((doctor) => doctor.role === appointment.doctorRole)
+                    .map((doctor) => (
+                      <option key={doctor.id} value={doctor.id}>
+                        {doctor.fullName} - {doctor.role}
+                      </option>
+                    ))}
+                </select>
+              </td>
 
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {doctors
-                  .filter((doctor) => {
-                    return doctor.role === appointment.doctorRole;
-                  })
-                  .map((doctor) => {
-                    return doctor.id === appointment.doctorId ? (
-                      <p
-                        key={doctor.id}
-                        className="bg-green-600 text-white py-1 px-3 rounded hover:bg-green-700 transition-colors"
-                      >
-                        Assigned
-                      </p>
-                    ) : (
-                      <button
-                        key={doctor.id} // This key prop for the <button> remains the same
-                        onClick={() => handleAssignDoctor(appointment.id)}
-                        className="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 transition-colors"
-                      >
-                        Assign
-                      </button>
-                    );
-                  })}
+                {
+                  doctors
+                    .filter((doctor) => doctor.role === appointment.doctorRole)
+                    .map((doctor) => {
+                      // Check if the doctor matches the doctorId for the appointment
+                      const isAssignedDoctor =
+                        doctor.id === appointment.doctorId;
+
+                      return isAssignedDoctor ? (
+                        <p
+                          key={doctor.id}
+                          className="bg-green-600 text-white py-1 px-3 rounded"
+                        >
+                          Assigned
+                        </p>
+                      ) : (
+                        <button
+                          key={doctor.id}
+                          onClick={() =>
+                            handleAssignDoctor(appointment.id, doctor.id)
+                          }
+                          className="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700 transition-colors"
+                        >
+                          Assign
+                        </button>
+                      );
+                    })[0] /* Only render the first result */
+                }
               </td>
             </tr>
           ))}
@@ -204,5 +193,4 @@ const AssignAppointment = () => {
     </div>
   );
 };
-
 export default AssignAppointment;

@@ -145,7 +145,7 @@ const DoctorDashboard = () => {
   };
 
   return (
-    <div className="p-5">
+    <div className="p-5 h-screen">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-3xl font-bold text-gray-700">Doctor Dashboard</h2>
         <button

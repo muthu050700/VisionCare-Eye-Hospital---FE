@@ -22,7 +22,7 @@ const FindDoctor = () => {
   const doctorRoles = ["cataracts", "glaucoma", "macular degeneration"];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-6xl mx-auto px-4 py-8 h-screen">
       <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
         Find a Doctor
       </h1>
