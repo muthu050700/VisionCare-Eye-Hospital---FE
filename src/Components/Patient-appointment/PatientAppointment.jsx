@@ -114,7 +114,7 @@ const PatientAppointments = () => {
   };
 
   return (
-    <div className="w-full h-screen mx-auto p-4">
+    <div className="w-full mx-auto p-4">
       <h2 className="text-3xl font-bold mb-6 text-center">
         {userRole !== "patient" ? "Your Appointments" : "Appointment Status"}
       </h2>

@@ -254,7 +254,7 @@ const DoctorAppointments = () => {
                         </>
                       ) : appointment.status === "approved" ? (
                         <p>You have approved the appointment</p>
-                      ) : appointment.status === "close appointment" ? (
+                      ) : appointment.status === "Appointment Closed" ? (
                         <>
                           {" "}
                           <Link
