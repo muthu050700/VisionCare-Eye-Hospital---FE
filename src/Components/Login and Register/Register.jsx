@@ -16,7 +16,7 @@ const initialFormDetails = {
   state: "",
   pinCode: "",
   email: "",
-  medicalHistory: "No Records",
+  medicalHistory: "No Record",
   role: "patient",
 };
 

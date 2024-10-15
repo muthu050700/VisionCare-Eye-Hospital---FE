@@ -1,0 +1,95 @@
+To make it simple i have registered some users and you can find the login details here
+
+1. Patient
+   Email: 
+   Password: 
+
+2. Admin
+   Email:
+   Password:
+
+3. Doctor
+   Email:
+   Password:      
+
+
+Application Flow:
+1. Account Registration & Login
+
+- If no account:
+  - Register for an account (roles: Patient, Doctor, Admin).
+
+- If an account already exists:
+  - Login with your credentials (roles: Patient, Doctor, Admin).
+
+
+2. Patient Role
+Permissions:
+
+- View Profile:
+   - Can view their own profile.
+   - No access to update profile information.
+
+- Book Appointments:
+   - Can schedule appointments with doctors.
+   - The appointment request is sent to the Admin, who will assign a doctor.
+
+- View Appointments:
+   - Can view the status of their booked appointments.
+   - Appointment statuses can be Approved, Closed, Cancelled, or Rescheduled.
+
+- Cancel Appointments:
+   - Can cancel their appointments if needed.
+
+- Reschedule Appointment:
+   - Can reschedule their appointments.
+
+- Find a Doctor:
+   - Can view a list of all available doctors, including their specializations (e.g., Cataracts, Glaucoma, etc.).
+
+
+3. Admin Role
+Permissions:
+
+- View Profile:
+  - Can view and update their own profile information.
+
+- View Users:
+  - Can view all registered users (patients and doctors) on the dashboard.
+
+- Manage Users:
+  - Can create, update, or delete user accounts for patients and doctors.
+  - Admins can assign roles (e.g. Doctor) and modify their permissions.
+
+- Assign Roles:
+  - Can assign roles to users and adjust their permissions within the system.
+
+- View Appointments:
+  - Can view all appointments booked by patients.
+  - Responsible for assigning doctors to the respective appointments.
+
+- Patient Reports:
+  - Can view the appointment records.
+  - Can grant access to doctors for viewing and updating patient medical records.
+
+
+4. Doctor Role
+Permissions:
+
+- View Profile:
+  - Can view and update their own profile information.
+
+- View Appointments:
+  - Can view all appointments scheduled with them.
+  - Responsible for updating the appointment status (e.g., Approved, Closed).
+
+- View Users:
+  - Can view patient profiles and access their details.
+  - Can update patient information, such as appointment-related details.
+
+- Update Appointment Status:
+  - Can mark appointments as Approved and Close the appointment once it is completed.
+
+- Access Patient Records:
+  - Can view, create, and update patient medical records (e.g., medical history, treatment notes).
+  - This access is specific to the doctor's area of practice (e.g., general checkups, surgeries).  
